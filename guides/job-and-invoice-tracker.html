@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to track jobs and invoices for a small service business | StoneRiver Holdings · Small Business Systems</title>
+<meta name="description" content="A simple, free way for small service businesses to track every job, what's been billed and who still owes them, using Excel or Google Sheets. Free template included.">
+<link rel="canonical" href="https://stoneriversystems.github.io/guides/job-and-invoice-tracker.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to track jobs and invoices for a small service business">
+<meta property="og:description" content="A simple, free way for small service businesses to track every job, what's been billed and who still owes them, using Excel or Google Sheets. Free template included.">
+<meta name="theme-color" content="#0E0E0C">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='24' fill='%230E0E0C'/%3E%3Ctext x='60' y='78' text-anchor='middle' font-family='Impact,Anton,sans-serif' font-size='56' fill='%23EFE7D4'%3ESR%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Archivo:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E0E0C;color:#EFE7D4;font-family:'Archivo','Helvetica Neue',sans-serif;font-size:18px;line-height:1.65}
+a{color:#EFE7D4}a:hover{color:#fff}a:focus-visible{outline:2px solid #EFE7D4;outline-offset:3px}
+header{max-width:1240px;margin:0 auto;padding:24px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
+header .brand{font-family:'Anton',sans-serif;font-size:26px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;margin-right:auto}
+header nav a{text-decoration:none;font-weight:500;letter-spacing:.06em;text-transform:uppercase;font-size:14px;margin-left:20px}
+main{max-width:720px;margin:0 auto;padding:32px 24px 80px}
+h1{font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(40px,7vw,68px);line-height:1;text-transform:uppercase;margin:8px 0 24px}
+h2{font-family:'Anton',sans-serif;font-weight:400;font-size:32px;text-transform:uppercase;line-height:1.1;margin:48px 0 12px}
+.kicker{font-weight:600;font-size:13px;letter-spacing:.28em;text-transform:uppercase;opacity:.8}
+.lede{font-size:21px;opacity:.9}
+table{width:100%;border-collapse:collapse;font-size:16px;margin:16px 0}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid #3a3832}th{background:#1d1c19}
+.box{border:2px solid #EFE7D4;border-radius:18px;padding:24px 28px;margin:48px 0 0}
+.btn{display:inline-flex;align-items:center;min-height:52px;box-sizing:border-box;padding:14px 26px;border-radius:999px;background:#EFE7D4;color:#0E0E0C;text-decoration:none;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:15px;margin:8px 10px 0 0}
+.btn.ghost{background:none;color:#EFE7D4;border:2px solid #EFE7D4}
+footer{max-width:1240px;margin:0 auto;padding:32px 24px 48px;font-size:14px;opacity:.75}
+li{margin:6px 0}
+</style>
+</head>
+<body>
+<header><a class="brand" href="../">StoneRiver</a><nav><a href="../#free">Free tools</a><a href="./">Guides</a><a href="../#contact">Contact</a></nav></header>
+<main>
+<p class="kicker">Guide · 6 min read</p>
+<h1>How to track jobs and invoices for a small service business</h1>
+<p class="lede">If your jobs live in a notebook, your texts and your head, some of them never get billed. Here's a simple way to fix that with a spreadsheet you already have.</p>
+
+<h2>Why jobs slip through the cracks</h2>
+<p>Most small crews don't lose money on the work. They lose it after: the job that got finished on a Friday and never invoiced, the bill that went out and nobody followed up on, the quote nobody called back about. None of it is laziness. It's just that nothing tells you what's still open.</p>
+
+<h2>The one rule: one row per job</h2>
+<p>Every job gets a row the moment it's agreed, and that row stays until the money is in. That's the whole system. Here are the columns that matter:</p>
+<table>
+<tr><th>Column</th><th>Why it's there</th></tr>
+<tr><td>Date &amp; customer</td><td>So you can find it later</td></tr>
+<tr><td>Job</td><td>What you did, in a few words</td></tr>
+<tr><td>Status</td><td>Quoted → Scheduled → In progress → Done → Invoiced → Paid</td></tr>
+<tr><td>Price &amp; paid</td><td>What you charged and what's come in</td></tr>
+<tr><td>Balance</td><td>Price minus paid — calculated for you</td></tr>
+<tr><td>Invoice date &amp; days since</td><td>How long they've owed you</td></tr>
+</table>
+
+<h2>The three moments to update it</h2>
+<ol>
+<li><strong>When a job is agreed:</strong> add the row, status Quoted or Scheduled.</li>
+<li><strong>When the job is done:</strong> change to Done. Anything sitting at Done is money you haven't asked for yet.</li>
+<li><strong>When money comes in:</strong> type the amount in Paid. The balance drops to zero and the row is finished.</li>
+</ol>
+<p>That's about 30 seconds per job. Do it from your phone in the truck if that's easiest — Google Sheets works on any phone.</p>
+
+<h2>The 10-minute Monday check</h2>
+<p>Once a week, sort by "days since invoice," biggest first. Anything over 30 days gets a friendly call or text today. Then look for anything marked Done and send those invoices. That one habit is usually where the money is.</p>
+
+<h2>Spreadsheet or app?</h2>
+<p>Apps like QuickBooks, Jobber or Housecall Pro do this and more, and they're worth it as you grow. But they cost money every month and take time to learn. If you're a crew of one to ten and you're not tracking anything yet, a spreadsheet you actually use beats an app you don't. You can always move up later — your list of jobs comes with you.</p>
+<div class="box">
+<p class="kicker">Skip the setup</p>
+<p style="margin:8px 0 4px">Download the free tracker, or email us the 3 things that keep slipping through the cracks and get a free written plan within 2 business days.</p>
+<a class="btn" href="../downloads/StoneRiver-Job-and-Invoice-Tracker.xlsx" download>Free tracker</a><a class="btn ghost" href="../#free">Free checkup</a>
+</div>
+</main>
+<footer>© StoneRiver Holdings LLC · Mississippi · Serving Gulfport, Biloxi, Long Beach, Pass Christian, Ocean Springs, D'Iberville, Bay St. Louis, Diamondhead and Pascagoula · (225) 317-6653</footer>
+</body>
+</html>
