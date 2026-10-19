@@ -34,16 +34,7 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
  #top > div:last-child{display:none !important}
  #top{padding-bottom:56px !important}
 }
-/* Sample tracker on phones: show the money columns, hide Job and Price */
-@media (max-width:640px){
- #sample table{min-width:0 !important;font-size:14px !important}
- #sample th:nth-child(2),#sample td:nth-child(2),#sample th:nth-child(4),#sample td:nth-child(4){display:none}
- #sample th,#sample td{padding:10px 10px !important}
-}
 @media (max-width:400px){
- #sample table{font-size:13px !important}
- #sample th,#sample td{padding:9px 6px !important}
- #sample caption{padding:10px 8px !important}
  #top > div > p:first-child{letter-spacing:0.16em !important;font-size:12px !important}
 }
 </style>
@@ -127,28 +118,24 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <h2 style="margin: 0 0 12px; font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(44px, 6vw, 80px); line-height: 1; text-transform: uppercase">What you actually get</h2>
 <p style="margin: 0 0 32px; max-width: 38em; opacity: 0.85">You get a simple tracker in your own Google or Microsoft account. Here's an example for a small lawn crew, <strong>filled with made-up data</strong>. Yours will have your real jobs and customers.</p>
 <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
-<div style="flex: 999 1 620px; min-width: 0; overflow-x: auto; border: 2px solid #EFE7D4; border-radius: 16px">
-<table style="width: 100%; min-width: 620px; border-collapse: collapse; font-size: 15px; background: #F7F2E6; color: #0E0E0C">
-<caption style="caption-side: top; text-align: left; padding: 12px 16px; background: #0E0E0C; color: #EFE7D4; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 13px">Jobs · sample</caption>
-<thead><tr style="background: #E3DAC3; text-align: left">
-<th style="padding: 10px 14px">Customer</th><th style="padding: 10px 14px">Job</th><th style="padding: 10px 14px">Status</th><th style="padding: 10px 14px; text-align: right">Price</th><th style="padding: 10px 14px; text-align: right">Owes</th><th style="padding: 10px 14px; text-align: right">Days</th>
-</tr></thead>
-<tbody>
-<tr style="border-top: 1px solid #D9CFB6"><td style="padding: 10px 14px">Harbor Street Duplex</td><td style="padding: 10px 14px">Weekly mow – Oct</td><td style="padding: 10px 14px">Paid</td><td style="padding: 10px 14px; text-align: right">$160</td><td style="padding: 10px 14px; text-align: right">–</td><td style="padding: 10px 14px; text-align: right"></td></tr>
-<tr style="border-top: 1px solid #D9CFB6"><td style="padding: 10px 14px">Pine Ave. Office</td><td style="padding: 10px 14px">Hedges + cleanup</td><td style="padding: 10px 14px">Invoiced</td><td style="padding: 10px 14px; text-align: right">$240</td><td style="padding: 10px 14px; text-align: right">$240</td><td style="padding: 10px 14px; text-align: right">12</td></tr>
-<tr style="border-top: 1px solid #D9CFB6; background: #F3C9C2; color: #6E0B0B"><td style="padding: 10px 14px">Bayou View Church</td><td style="padding: 10px 14px">Fall cleanup</td><td style="padding: 10px 14px">Invoiced</td><td style="padding: 10px 14px; text-align: right">$425</td><td style="padding: 10px 14px; text-align: right">$425</td><td style="padding: 10px 14px; text-align: right"><strong>41</strong></td></tr>
-<tr style="border-top: 1px solid #D9CFB6"><td style="padding: 10px 14px">Live Oak Lane home</td><td style="padding: 10px 14px">Sod install</td><td style="padding: 10px 14px">Done</td><td style="padding: 10px 14px; text-align: right">$900</td><td style="padding: 10px 14px; text-align: right">$900</td><td style="padding: 10px 14px; text-align: right"></td></tr>
-<tr style="border-top: 1px solid #D9CFB6"><td style="padding: 10px 14px">Gulf Breeze Rentals</td><td style="padding: 10px 14px">Monthly service</td><td style="padding: 10px 14px">Quoted</td><td style="padding: 10px 14px; text-align: right">$320</td><td style="padding: 10px 14px; text-align: right"></td><td style="padding: 10px 14px; text-align: right"></td></tr>
-</tbody></table>
-</div>
-<div style="flex: 1 1 280px; border: 2px solid #EFE7D4; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="flex: 1 1 320px; max-width: 560px; border: 2px solid #EFE7D4; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 10px">
 <p style="margin: 0; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 13px">Who owes me · sample</p>
-<p style="margin: -6px 0 0; font-size: 14px; opacity: 0.75">Totals from the jobs list above.</p>
-<p style="margin: 0; display: flex; justify-content: space-between; gap: 12px"><span>Still owed</span><strong>$1,565</strong></p>
-<p style="margin: 0; display: flex; justify-content: space-between; gap: 12px; color: #F3A99E"><span>Over 30 days</span><strong>$425</strong></p>
-<p style="margin: 0; display: flex; justify-content: space-between; gap: 12px"><span>Done, not billed yet</span><strong>1 job</strong></p>
-<p style="margin: 0; display: flex; justify-content: space-between; gap: 12px"><span>Quotes waiting</span><strong>1</strong></p>
-<p style="margin: 8px 0 0; font-size: 15px; opacity: 0.8">Open it Monday morning and you know exactly who to call.</p>
+<p style="margin: 0; font-size: 14px; opacity: 0.75">You log each job in one simple list. This view pulls out who still owes you, biggest worry first.</p>
+<ul style="list-style: none; margin: 0; padding: 0">
+<li style="display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(239,231,212,0.25); color: #F3A99E"><span><strong>Bayou View Church</strong><br><span style="font-size: 14px; opacity: 0.85">Invoiced 41 days ago · call first</span></span><strong>$425</strong></li>
+<li style="display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(239,231,212,0.25)"><span><strong>Pine Ave. Office</strong><br><span style="font-size: 14px; opacity: 0.85">Invoiced 12 days ago</span></span><strong>$240</strong></li>
+<li style="display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(239,231,212,0.25)"><span><strong>Live Oak Lane home</strong><br><span style="font-size: 14px; opacity: 0.85">Job done · not billed yet</span></span><strong>$900</strong></li>
+<li style="display: flex; justify-content: space-between; gap: 12px; padding: 12px 0 0; border-top: 2px solid #EFE7D4; font-size: 18px"><strong>Total owed</strong><strong>$1,565</strong></li>
+</ul>
+<p style="margin: 4px 0 0; font-size: 15px; opacity: 0.8">Plus 1 quote waiting on an answer (Gulf Breeze Rentals). Open it Monday morning and you know exactly who to call.</p>
+</div>
+<div style="flex: 1 1 280px; max-width: 420px; align-self: center; display: flex; flex-direction: column; gap: 14px">
+<p style="margin: 0; font-family: 'Anton', sans-serif; font-size: 32px; line-height: 1.05; text-transform: uppercase">Want this for your business?</p>
+<p style="margin: 0; opacity: 0.85">Try the free version with your own jobs, or have us set it up with your real customers and show your crew how to use it.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="#free" data-goatcounter-click="sample-to-free" style="text-decoration: none; background: #EFE7D4; color: #0E0E0C; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 14px; padding: 14px 22px; border-radius: 999px; min-height: 48px; box-sizing: border-box; display: inline-flex; align-items: center">Try it free</a>
+<a href="#services" data-goatcounter-click="sample-to-services" style="text-decoration: none; border: 2px solid #EFE7D4; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 14px; padding: 12px 20px; border-radius: 999px; min-height: 48px; box-sizing: border-box; display: inline-flex; align-items: center">Setup from $100</a>
+</div>
 </div>
 </div>
 </section>
@@ -162,7 +149,7 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <div style="border: 2px solid #EFE7D4; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
 <h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 30px; text-transform: uppercase; line-height: 1.05">Job &amp; invoice tracker</h3>
 <p style="margin: 0; font-weight: 600; font-size: 18px">Know who still owes you, every Monday.</p>
-<ul style="margin: 0; padding-left: 20px; opacity: 0.85; font-size: 16px"><li style="margin: 4px 0">A Google Sheet or Excel file in your own account</li><li style="margin: 4px 0">Set up for your job types and statuses</li><li style="margin: 4px 0">A &ldquo;who owes me&rdquo; view with totals</li><li style="margin: 4px 0">Up to 20 of your current jobs entered for you</li><li style="margin: 4px 0">30-minute walkthrough</li></ul>
+<ul style="margin: 0; padding-left: 20px; opacity: 0.85; font-size: 16px"><li style="margin: 4px 0">A Google Sheet or Excel file in your own account</li><li style="margin: 4px 0">Set up for your job types and statuses</li><li style="margin: 4px 0">A list of who owes you and how much, with totals</li><li style="margin: 4px 0">Up to 20 of your current jobs entered for you</li><li style="margin: 4px 0">30-minute walkthrough</li></ul>
 <p style="margin: 0; font-size: 14px; opacity: 0.85;"><strong>Good for:</strong> Lawn &amp; pressure washing, cleaning, HVAC, plumbing, contractors</p>
 <p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">From $100</p>
 </div>
