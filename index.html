@@ -21,6 +21,15 @@ html{scroll-behavior:smooth}
 body{margin:0;background:#0E0E0C}
 a{color:#EFE7D4}a:hover{color:#ffffff}
 a:focus-visible{outline:2px solid #EFE7D4;outline-offset:3px}
+/* Phones: bigger tap targets, tighter menu */
+header nav a{min-height:44px;display:inline-flex;align-items:center}
+@media (max-width:600px){
+ header nav{gap:0 18px !important;font-size:14px !important}
+ header nav a[href="#how"]{display:none !important}
+}
+@media (max-width:400px){
+ #top > div > p:first-child{letter-spacing:0.16em !important;font-size:12px !important}
+}
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"StoneRiver Holdings","alternateName":"StoneRiver Holdings · Small Business Systems","url":"https://stoneriversystems.github.io/","telephone":"+1-225-317-6653","email":"stoneriver.coast@gmail.com","description":"Back-office systems for small businesses on the Mississippi Gulf Coast: job & invoice trackers, supply & inventory trackers, written procedures, and website & Google listing refreshes.","areaServed":["Gulfport, MS","Biloxi, MS","Long Beach, MS","Pass Christian, MS","Ocean Springs, MS","D'Iberville, MS","Bay St. Louis, MS","Diamondhead, MS","Pascagoula, MS"],"priceRange":"$75-$500"}</script>
 </head>
