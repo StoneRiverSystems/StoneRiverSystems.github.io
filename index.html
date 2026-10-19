@@ -27,6 +27,11 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
  header nav{gap:0 18px !important;font-size:14px !important}
  header nav a[href="#how"]{display:none !important}
 }
+/* Big SR badge: computers only; on phones/tablets it pushes "Start free" down a full screen */
+@media (max-width:900px){
+ #top > div:last-child{display:none !important}
+ #top{padding-bottom:56px !important}
+}
 @media (max-width:400px){
  #top > div > p:first-child{letter-spacing:0.16em !important;font-size:12px !important}
 }
