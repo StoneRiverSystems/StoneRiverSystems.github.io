@@ -48,6 +48,38 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 @media (max-width:400px){
  #top > div > p:first-child{letter-spacing:0.16em !important;font-size:12px !important}
 }
+/* sample case study */
+.case{margin-top:56px;border-top:2px solid #EFE7D4;padding-top:40px}
+.case-head{max-width:44em}
+.case-tag{margin:0;font-weight:600;font-size:13px;letter-spacing:.28em;text-transform:uppercase;opacity:.8}
+.case-title{margin:8px 0 8px;font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(30px,4vw,44px);line-height:1.05;text-transform:uppercase}
+.case-sub{margin:0;opacity:.85}
+.case-steps{list-style:none;margin:32px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.case-steps li{border:2px solid #EFE7D4;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.case-n{font-family:'Anton',sans-serif;font-size:22px;line-height:1.1;text-transform:uppercase}
+.case-steps p{margin:0;opacity:.85;font-size:16px}
+@media (max-width:1000px){.case-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.case-steps{grid-template-columns:minmax(0,1fr)}}
+/* services grid: even cards; "What's included" opens on all cards together (assets/js/site.js) */
+.svc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:stretch}
+.svc-wide{grid-column:1/-1}
+@media (max-width:1100px){.svc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.svc-grid{grid-template-columns:minmax(0,1fr)}}
+/* service scope */
+.scope{border-top:1px solid rgba(239,231,212,.25);padding-top:10px;font-size:15px}
+.scope summary{cursor:pointer;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px;min-height:44px;display:flex;align-items:center;list-style:none}
+.scope summary::-webkit-details-marker{display:none}
+.scope summary::after{content:"+";margin-left:auto;font-size:20px;font-weight:400;line-height:1}
+.scope[open] summary::after{content:"\2013"}
+.scope ul{margin:0 0 10px;padding-left:20px;opacity:.88}
+.scope li{margin:3px 0}
+.scope-h{margin:8px 0 4px;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.terms{margin-top:32px;max-width:52em;font-size:16px}
+.terms ul{margin:0;padding-left:20px;opacity:.88}
+.terms li{margin:6px 0}
+/* call-to-action band after services */
+.cta-band{margin-top:40px;border:2px dashed #EFE7D4;border-radius:20px;padding:24px 28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 32px}
+.cta-h{margin:0;font-family:'Anton',sans-serif;font-size:30px;line-height:1.05;text-transform:uppercase}
 /* Our work */
 .work-wrap{max-width:1240px;margin:0 auto;padding:96px 24px}
 .work-h2{margin:0 0 12px;font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(44px,6vw,80px);line-height:1;text-transform:uppercase}
@@ -66,7 +98,7 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 .ridge-inner img{height:236px;width:auto;max-width:45%;object-fit:contain}
 .ridge-copy{display:flex;flex-direction:column;gap:12px;min-width:0}
 .ridge-name{font-family:'Lilita One',sans-serif;font-size:34px;line-height:1.05;color:#1F3A5F}
-.ridge-btn{align-self:flex-start;font-family:'Lilita One',sans-serif;font-size:16px;letter-spacing:1px;color:#fff;background:#F26B1D;border:3px solid #1E1A17;border-radius:12px;padding:8px 16px}
+.ridge-btn{align-self:flex-start;font-family:'Lilita One',sans-serif;font-size:16px;letter-spacing:1px;color:#fff;background:#E25E18;border:3px solid #1E1A17;border-radius:12px;padding:8px 16px}
 .work-body{flex:1;display:flex;flex-direction:column;gap:12px;padding:28px}
 .work-kicker{margin:0;font-size:13px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;opacity:.8}
 .work-title{margin:0;font-family:'Anton',sans-serif;font-weight:400;font-size:34px;text-transform:uppercase;line-height:1.05}
@@ -108,7 +140,7 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <a href="guides/" style="text-decoration: none">Guides</a>
 <a href="#how" style="text-decoration: none">How it works</a>
 <a href="#contact" style="text-decoration: none">Contact</a>
-<a href="mailto:stoneriver.coast@gmail.com" data-goatcounter-click="email-marcus" style="text-decoration: none; border: 2px solid #EFE7D4; border-radius: 999px; padding: 10px 20px; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center">Get a quote</a>
+<a href="mailto:stoneriver.coast@gmail.com?subject=Free%20back%20office%20checkup&amp;body=Business%20name%3A%0AWhat%20kind%20of%20business%3A%0AHow%20many%20people%3A%0A%0AThe%203%20things%20that%20keep%20slipping%20through%20the%20cracks%3A%0A1.%0A2.%0A3.%0A%0AHow%20we%20keep%20track%20of%20things%20now%20(notebook%2C%20texts%2C%20spreadsheet%2C%20memory)%3A%0A" data-goatcounter-click="checkup-nav" style="text-decoration: none; border: 2px solid #EFE7D4; border-radius: 999px; padding: 10px 20px; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center">Free checkup</a>
 </nav>
 </header>
 
@@ -118,10 +150,10 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <h1 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(56px, 9vw, 128px); line-height: 0.92; text-transform: uppercase; letter-spacing: 0.01em">Stop running your business from memory.</h1>
 <p style="margin: 32px 0 0; max-width: 34em; font-size: 20px; opacity: 0.88">We organize the back office for small businesses on the Mississippi Gulf Coast: jobs, invoices, supplies and written procedures. Set up in your own accounts, so it's yours to keep.</p>
 <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px">
-<a href="mailto:stoneriver.coast@gmail.com" data-goatcounter-click="email-marcus" style="text-decoration: none; background: #EFE7D4; color: #0E0E0C; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 15px; padding: 16px 28px; border-radius: 999px; min-height: 52px; box-sizing: border-box; display: inline-flex; align-items: center">Email Marcus</a>
+<a href="mailto:stoneriver.coast@gmail.com?subject=Free%20back%20office%20checkup&amp;body=Business%20name%3A%0AWhat%20kind%20of%20business%3A%0AHow%20many%20people%3A%0A%0AThe%203%20things%20that%20keep%20slipping%20through%20the%20cracks%3A%0A1.%0A2.%0A3.%0A%0AHow%20we%20keep%20track%20of%20things%20now%20(notebook%2C%20texts%2C%20spreadsheet%2C%20memory)%3A%0A" data-goatcounter-click="checkup-hero" style="text-decoration: none; background: #EFE7D4; color: #0E0E0C; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 15px; padding: 16px 28px; border-radius: 999px; min-height: 52px; box-sizing: border-box; display: inline-flex; align-items: center">Get my free checkup</a>
 <a href="tel:+12253176653" data-goatcounter-click="call-marcus" style="text-decoration: none; border: 2px solid #EFE7D4; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 15px; padding: 14px 26px; border-radius: 999px; min-height: 52px; box-sizing: border-box; display: inline-flex; align-items: center">Call (225) 317-6653</a>
 </div>
-<p style="margin: 20px 0 0; font-size: 16px; opacity: 0.8">Not ready to talk? <a href="#free">Grab the free job &amp; invoice tracker</a> — no sign-up.</p>
+<p style="margin: 20px 0 0; font-size: 16px; opacity: 0.8">Email us the 3 things slipping through the cracks and get a short written plan within 2 business days. Free, no call needed. Rather do it yourself? <a href="#free">Grab the free tracker</a>.</p>
 </div>
 <div style="flex: 1 1 420px; display: flex; justify-content: center">
 <img src="assets/img/stoneriver-logo.svg" width="520" height="257" alt="StoneRiver logo: a river winding under live oaks" style="width:100%;max-width:520px;height:auto;filter:drop-shadow(0 18px 40px rgba(60,155,139,.18))">
@@ -134,19 +166,19 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 
 <section id="free" style="max-width: 1240px; margin: 0 auto; padding: 96px 24px 0">
 <h2 style="margin: 0 0 12px; font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(44px, 6vw, 80px); line-height: 1; text-transform: uppercase">Start free</h2>
-<p style="margin: 0 0 40px; max-width: 36em; opacity: 0.85">Two ways to get organized today. No sign-up, no sales call, nothing to buy.</p>
+<p style="margin: 0 0 40px; max-width: 36em; opacity: 0.85">Two ways to get organized today. No sign-up, no sales call, nothing to buy. Most owners start with the checkup.</p>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 20px">
 <div style="background: #EFE7D4; color: #0E0E0C; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 14px">
-<p style="margin: 0; font-weight: 600; font-size: 13px; letter-spacing: 0.28em; text-transform: uppercase">Free download</p>
-<h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 36px; text-transform: uppercase; line-height: 1.05">Job &amp; invoice tracker</h3>
-<p style="margin: 0">Every job, what's been billed, what's been paid and who still owes you. Unpaid invoices over 30 days turn red. Works in Excel and Google Sheets.</p>
-<a href="downloads/StoneRiver-Job-and-Invoice-Tracker.xlsx" download data-goatcounter-click="download-tracker" style="margin-top: auto; align-self: flex-start; text-decoration: none; background: #0E0E0C; color: #EFE7D4; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 15px; padding: 16px 28px; border-radius: 999px; min-height: 52px; box-sizing: border-box; display: inline-flex; align-items: center">Download the tracker</a>
+<p style="margin: 0; font-weight: 600; font-size: 13px; letter-spacing: 0.28em; text-transform: uppercase">Start here · free, by email</p>
+<h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 36px; text-transform: uppercase; line-height: 1.05">Back office checkup</h3>
+<p style="margin: 0">Email us the 3 things that keep slipping through the cracks. Within 2 business days you get a short written plan: what we'd fix first, how, and what it would cost. Free, no call needed, no obligation.</p>
+<a href="mailto:stoneriver.coast@gmail.com?subject=Free%20back%20office%20checkup&amp;body=Business%20name%3A%0AWhat%20kind%20of%20business%3A%0AHow%20many%20people%3A%0A%0AThe%203%20things%20that%20keep%20slipping%20through%20the%20cracks%3A%0A1.%0A2.%0A3.%0A%0AHow%20we%20keep%20track%20of%20things%20now%20(notebook%2C%20texts%2C%20spreadsheet%2C%20memory)%3A%0A" data-goatcounter-click="checkup-email" style="margin-top: auto; align-self: flex-start; text-decoration: none; background: #0E0E0C; color: #EFE7D4; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 15px; padding: 16px 28px; border-radius: 999px; min-height: 52px; box-sizing: border-box; display: inline-flex; align-items: center">Get my free checkup</a>
 </div>
 <div style="border: 2px solid #EFE7D4; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 14px">
-<p style="margin: 0; font-weight: 600; font-size: 13px; letter-spacing: 0.28em; text-transform: uppercase">Free, by email</p>
-<h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 36px; text-transform: uppercase; line-height: 1.05">Back office checkup</h3>
-<p style="margin: 0; opacity: 0.88">Email us the 3 things that keep slipping through the cracks. Within 2 business days you get a short written plan: what we'd fix first, how, and what it would cost. Free, no call needed, no obligation.</p>
-<a href="mailto:stoneriver.coast@gmail.com?subject=Free%20back%20office%20checkup&amp;body=Business%20name%3A%0AWhat%20kind%20of%20business%3A%0AHow%20many%20people%3A%0A%0AThe%203%20things%20that%20keep%20slipping%20through%20the%20cracks%3A%0A1.%0A2.%0A3.%0A%0AHow%20we%20keep%20track%20of%20things%20now%20(notebook%2C%20texts%2C%20spreadsheet%2C%20memory)%3A%0A" data-goatcounter-click="checkup-email" style="margin-top: auto; align-self: flex-start; text-decoration: none; background: #EFE7D4; color: #0E0E0C; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 15px; padding: 16px 28px; border-radius: 999px; min-height: 52px; box-sizing: border-box; display: inline-flex; align-items: center">Get my free checkup</a>
+<p style="margin: 0; font-weight: 600; font-size: 13px; letter-spacing: 0.28em; text-transform: uppercase">Do it yourself · free download</p>
+<h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 36px; text-transform: uppercase; line-height: 1.05">Job &amp; invoice tracker</h3>
+<p style="margin: 0; opacity: 0.88">Every job, what's been billed, what's been paid and who still owes you. Unpaid invoices over 30 days turn red. Works in Excel and Google Sheets.</p>
+<a href="downloads/StoneRiver-Job-and-Invoice-Tracker.xlsx" download data-goatcounter-click="download-tracker" style="margin-top: auto; align-self: flex-start; text-decoration: none; border: 2px solid #EFE7D4; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 15px; padding: 16px 28px; border-radius: 999px; min-height: 52px; box-sizing: border-box; display: inline-flex; align-items: center">Download the tracker</a>
 </div>
 </div>
 </section>
@@ -168,12 +200,25 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 </div>
 <div style="flex: 1 1 280px; max-width: 420px; align-self: center; display: flex; flex-direction: column; gap: 14px">
 <p style="margin: 0; font-family: 'Anton', sans-serif; font-size: 32px; line-height: 1.05; text-transform: uppercase">Want this for your business?</p>
-<p style="margin: 0; opacity: 0.85">Try the free version with your own jobs, or have us set it up with your real customers and show your crew how to use it.</p>
+<p style="margin: 0; opacity: 0.85">Start with a free checkup and we'll tell you what we'd set up first and what it costs. Or <a href="#free">try the free tracker</a> with your own jobs.</p>
 <div style="display: flex; flex-wrap: wrap; gap: 12px">
-<a href="#free" data-goatcounter-click="sample-to-free" style="text-decoration: none; background: #EFE7D4; color: #0E0E0C; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 14px; padding: 14px 22px; border-radius: 999px; min-height: 48px; box-sizing: border-box; display: inline-flex; align-items: center">Try it free</a>
+<a href="mailto:stoneriver.coast@gmail.com?subject=Free%20back%20office%20checkup&amp;body=Business%20name%3A%0AWhat%20kind%20of%20business%3A%0AHow%20many%20people%3A%0A%0AThe%203%20things%20that%20keep%20slipping%20through%20the%20cracks%3A%0A1.%0A2.%0A3.%0A%0AHow%20we%20keep%20track%20of%20things%20now%20(notebook%2C%20texts%2C%20spreadsheet%2C%20memory)%3A%0A" data-goatcounter-click="checkup-sample" style="text-decoration: none; background: #EFE7D4; color: #0E0E0C; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 14px; padding: 14px 22px; border-radius: 999px; min-height: 48px; box-sizing: border-box; display: inline-flex; align-items: center">Get my free checkup</a>
 <a href="#services" data-goatcounter-click="sample-to-services" style="text-decoration: none; border: 2px solid #EFE7D4; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 14px; padding: 12px 20px; border-radius: 999px; min-height: 48px; box-sizing: border-box; display: inline-flex; align-items: center">Setup from $100</a>
 </div>
 </div>
+</div>
+<div class="case" aria-labelledby="case-h">
+<div class="case-head">
+<p class="case-tag">Sample setup · made-up business</p>
+<h3 id="case-h" class="case-title">How a setup like this comes together</h3>
+<p class="case-sub">An example of our process for a fictional 3-person lawn crew. The business, names and numbers are made up to show the work. They are not real client results.</p>
+</div>
+<ol class="case-steps">
+<li><span class="case-n">The problem</span><p>Jobs lived in a notebook and text messages. The owner billed from memory at the end of the week, and some finished jobs never got invoiced.</p></li>
+<li><span class="case-n">What we built</span><p>One Google Sheet in the owner's account: a job list with simple statuses (quoted, scheduled, done, billed, paid) and a "who owes me" view sorted by how long each invoice has been out.</p></li>
+<li><span class="case-n">What they got</span><p>Their current jobs entered for them, a 30-minute walkthrough for the owner and crew lead, and a one-page how-to taped inside the truck.</p></li>
+<li><span class="case-n">Every week</span><p>The crew lead marks jobs done from a phone. Monday morning, the owner opens one view, bills anything marked done and calls anyone past 30 days.</p></li>
+</ol>
 </div>
 </section>
 
@@ -182,12 +227,17 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <p style="margin: 0 0 8px; max-width: 40em; opacity: 0.9">For small businesses on the Coast: crews, shops, kitchens and offices that are running on notebooks, texts and memory.</p>
 <p style="margin: 0 0 24px; max-width: 40em; opacity: 0.85">Prices are starting rates. You get a fixed price in writing before any work starts, and everything is built in your own account.</p>
 <p style="margin: 0 0 48px; display: inline-block; border: 2px dashed #EFE7D4; border-radius: 14px; padding: 14px 20px; max-width: 40em"><strong style="letter-spacing: 0.06em; text-transform: uppercase">Founding clients:</strong> our first 3 clients pay the &ldquo;From&rdquo; price on each card and get their first month of upkeep free.</p>
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 20px">
+<div class="svc-grid">
 <div style="border: 2px solid #EFE7D4; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
 <h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 30px; text-transform: uppercase; line-height: 1.05">Job &amp; invoice tracker</h3>
 <p style="margin: 0; font-weight: 600; font-size: 18px">Know who still owes you, every Monday.</p>
 <ul style="margin: 0; padding-left: 20px; opacity: 0.85; font-size: 16px"><li style="margin: 4px 0">A Google Sheet or Excel file in your own account</li><li style="margin: 4px 0">Set up for your job types and statuses</li><li style="margin: 4px 0">A list of who owes you and how much, with totals</li><li style="margin: 4px 0">Up to 20 of your current jobs entered for you</li><li style="margin: 4px 0">30-minute walkthrough</li></ul>
 <p style="margin: 0; font-size: 14px; opacity: 0.85;"><strong>Good for:</strong> Lawn &amp; pressure washing, cleaning, HVAC, plumbing, contractors</p>
+<details class="scope"><summary>What's included</summary>
+<p class="scope-h">Included</p><ul><li>The tracker built in your Google or Microsoft account</li><li>Up to 20 current jobs entered</li><li>30-minute walkthrough</li><li>1 round of changes within 14 days</li></ul>
+<p class="scope-h">You provide</p><ul><li>Your job and customer list (a photo of the notebook works)</li><li>Sharing access to your account, never your password</li></ul>
+<p class="scope-h">Quoted separately</p><ul><li>More than 20 jobs entered</li><li>Connecting to QuickBooks or other apps</li><li>Extra custom reports</li></ul>
+</details>
 <p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">From $100</p>
 </div>
 <div style="border: 2px solid #EFE7D4; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
@@ -195,6 +245,11 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <p style="margin: 0; font-weight: 600; font-size: 18px">Stop running out in the middle of a job or a rush.</p>
 <ul style="margin: 0; padding-left: 20px; opacity: 0.85; font-size: 16px"><li style="margin: 4px 0">Up to 50 items entered with reorder points</li><li style="margin: 4px 0">Your supplier contacts in one place</li><li style="margin: 4px 0">A &ldquo;what to reorder&rdquo; view</li><li style="margin: 4px 0">30-minute walkthrough</li></ul>
 <p style="margin: 0; font-size: 14px; opacity: 0.85;"><strong>Good for:</strong> Restaurants, bakeries, shops, salons, auto shops</p>
+<details class="scope"><summary>What's included</summary>
+<p class="scope-h">Included</p><ul><li>The tracker built in your account</li><li>Up to 50 items with reorder points</li><li>Supplier contact list</li><li>30-minute walkthrough and 1 round of changes</li></ul>
+<p class="scope-h">You provide</p><ul><li>Your item list and supplier info</li><li>Sharing access to your account</li></ul>
+<p class="scope-h">Quoted separately</p><ul><li>More than 50 items</li><li>Barcode scanning or connecting to a point-of-sale system</li></ul>
+</details>
 <p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">From $100</p>
 </div>
 <div style="border: 2px solid #EFE7D4; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
@@ -202,6 +257,11 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <p style="margin: 0; font-weight: 600; font-size: 18px">Jobs done the same way, even when you're not there.</p>
 <ul style="margin: 0; padding-left: 20px; opacity: 0.85; font-size: 16px"><li style="margin: 4px 0">One task written as a 1&ndash;2 page guide</li><li style="margin: 4px 0">A &ldquo;what usually goes wrong&rdquo; section</li><li style="margin: 4px 0">Delivered as a Google Doc and PDF</li></ul>
 <p style="margin: 0; font-size: 14px; opacity: 0.85;"><strong>Good for:</strong> Training new hires, opening &amp; closing, estimates, cleanup checklists</p>
+<details class="scope"><summary>What's included</summary>
+<p class="scope-h">Included</p><ul><li>One task written up in 1–2 pages</li><li>1 round of revisions</li><li>Google Doc and PDF</li></ul>
+<p class="scope-h">You provide</p><ul><li>A walkthrough of the task, in person, by phone or by video</li></ul>
+<p class="scope-h">Quoted separately</p><ul><li>Photo or video shoots</li><li>Translations</li><li>Multi-step manuals (quoted per guide)</li></ul>
+</details>
 <p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">$75 per guide</p>
 </div>
 <div style="border: 2px solid #EFE7D4; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
@@ -209,6 +269,11 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <p style="margin: 0; font-weight: 600; font-size: 18px">Get found, and look open for business.</p>
 <ul style="margin: 0; padding-left: 20px; opacity: 0.85; font-size: 16px"><li style="margin: 4px 0">One mobile-friendly page on your own domain (first year included)</li><li style="margin: 4px 0">Hosted free in your account</li><li style="margin: 4px 0">Google Business Profile hours, services and photos updated</li><li style="margin: 4px 0">Extra pages and online ordering quoted separately</li></ul>
 <p style="margin: 0; font-size: 14px; opacity: 0.85;"><strong>Good for:</strong> Anyone with old hours, no website, or a listing nobody's touched</p>
+<details class="scope"><summary>What's included</summary>
+<p class="scope-h">Included</p><ul><li>One mobile-friendly page</li><li>Domain registration for year one (standard .com)</li><li>Hosting set up free in your account</li><li>Google Business Profile hours, services and photos</li><li>1 round of revisions</li></ul>
+<p class="scope-h">You provide</p><ul><li>Your logo, photos and basic info (we help with wording)</li><li>Manager access to your Google Business Profile</li></ul>
+<p class="scope-h">Quoted separately</p><ul><li>Domain renewal after year one (paid to the registrar, usually about $15–25 a year)</li><li>Extra pages</li><li>Online ordering, booking or payments</li></ul>
+</details>
 <p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">From $160</p>
 </div>
 <div style="border: 2px solid #EFE7D4; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
@@ -216,22 +281,53 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <p style="margin: 0; font-weight: 600; font-size: 18px">A mark that looks good on a sign, a shirt and a phone.</p>
 <ul style="margin: 0; padding-left: 20px; opacity: 0.85; font-size: 16px"><li style="margin: 4px 0">A logo designed from your ideas</li><li style="margin: 4px 0">Files for your website, printing and shirts</li><li style="margin: 4px 0">Colorways, badges, stickers and seals quoted separately</li></ul>
 <p style="margin: 0; font-size: 14px; opacity: 0.85;"><strong>Good for:</strong> New businesses, rebrands, and anyone with a logo that won't print right.</p>
+<details class="scope"><summary>What's included</summary>
+<p class="scope-h">Included</p><ul><li>A logo designed from your ideas</li><li>1 round of revisions</li><li>Files for web, print and shirts (PNG, SVG, PDF)</li></ul>
+<p class="scope-h">You provide</p><ul><li>Your business name, ideas and any examples you like</li></ul>
+<p class="scope-h">Quoted separately</p><ul><li>Extra concepts or revision rounds</li><li>Colorways, badges, stickers and seals</li></ul>
+</details>
 <p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">From $35</p>
 </div>
-<div style="background: #EFE7D4; color: #0E0E0C; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
+<div style="background: #EFE7D4; color: #0E0E0C; border: 2px solid #EFE7D4; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
 <h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 30px; text-transform: uppercase; line-height: 1.05">Setup bundle</h3>
 <p style="margin: 0; font-weight: 600; font-size: 18px">Get the whole back office sorted at once.</p>
 <ul style="margin: 0; padding-left: 20px; font-size: 16px"><li style="margin: 4px 0">Any 2&ndash;3 of the services above, done together</li><li style="margin: 4px 0">One-hour walkthrough for you and your crew</li><li style="margin: 4px 0">A handoff checklist so nothing's forgotten</li></ul>
 <p style="margin: 0; font-size: 14px;"><strong>Good for:</strong> Owners who want it all fixed in one go</p>
+<details class="scope" style="border-top-color: rgba(14,14,12,.25)"><summary>What's included</summary>
+<p class="scope-h">Included</p><ul><li>Any 2–3 services above, each with its own included scope</li><li>One-hour walkthrough for you and your crew</li><li>Handoff checklist</li></ul>
+<p class="scope-h">You provide</p><ul><li>What each service above needs</li></ul>
+<p class="scope-h">Quoted separately</p><ul><li>Anything beyond each service's included scope</li></ul>
+</details>
 <p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">From $300</p>
 </div>
-<div style="border: 2px solid #EFE7D4; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
+<div class="svc-wide" style="border: 2px solid #EFE7D4; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
 <h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 30px; text-transform: uppercase; line-height: 1.05">Monthly upkeep</h3>
 <p style="margin: 0; font-weight: 600; font-size: 18px">Keep it working as your business changes.</p>
 <ul style="margin: 0; padding-left: 20px; opacity: 0.85; font-size: 16px"><li style="margin: 4px 0">Up to 2 hours a month of updates and fixes</li><li style="margin: 4px 0">Replies within 1 business day; most fixes within 3</li><li style="margin: 4px 0">Month to month, cancel anytime</li></ul>
 <p style="margin: 0; font-size: 14px; opacity: 0.85;"><strong>Good for:</strong> Anyone who'd rather not touch the spreadsheet themselves</p>
+<details class="scope"><summary>What's included</summary>
+<p class="scope-h">Included</p><ul><li>Up to 2 hours a month of updates and fixes</li><li>Replies within 1 business day</li></ul>
+<p class="scope-h">You provide</p><ul><li>A heads-up when something changes in your business</li></ul>
+<p class="scope-h">Quoted separately</p><ul><li>Unused hours don't roll over</li><li>New builds or big changes are quoted separately</li></ul>
+</details>
 <p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">From $100/month</p>
 </div>
+</div>
+<div class="terms">
+<p class="scope-h">The fine print, in plain words</p>
+<ul>
+<li>Every job starts with a written quote that lists exactly what's included. The price doesn't change unless you ask for more.</li>
+<li>Outside costs, like domain renewals or paid apps, are paid by you directly and shown in the quote first.</li>
+<li>Changes after handoff are covered by monthly upkeep, or quoted separately if you don't have it.</li>
+<li>Everything lives in your own accounts. We work through shared access and never ask for your passwords.</li>
+</ul>
+</div>
+<div class="cta-band">
+<div style="min-width: 0">
+<p class="cta-h">Not sure which one you need?</p>
+<p style="margin: 6px 0 0; opacity: 0.85">Send us the free checkup. We'll reply within 2 business days with what we'd fix first and a fixed price.</p>
+</div>
+<a href="mailto:stoneriver.coast@gmail.com?subject=Free%20back%20office%20checkup&amp;body=Business%20name%3A%0AWhat%20kind%20of%20business%3A%0AHow%20many%20people%3A%0A%0AThe%203%20things%20that%20keep%20slipping%20through%20the%20cracks%3A%0A1.%0A2.%0A3.%0A%0AHow%20we%20keep%20track%20of%20things%20now%20(notebook%2C%20texts%2C%20spreadsheet%2C%20memory)%3A%0A" data-goatcounter-click="checkup-services" style="text-decoration: none; background: #EFE7D4; color: #0E0E0C; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 15px; padding: 16px 28px; border-radius: 999px; min-height: 52px; box-sizing: border-box; display: inline-flex; align-items: center; flex: none">Get my free checkup</a>
 </div>
 </section>
 
@@ -246,7 +342,7 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <span class="rose-top">ROSÉ</span>
 <span class="rose-name">Muse</span>
 <span class="rose-tag">Makeup artistry that shines</span>
-<span class="rose-btn">Book your glam</span>
+<span class="rose-btn" aria-hidden="true">Book your glam</span>
 </div>
 <div class="work-body">
 <p class="work-kicker">Website · Beauty</p>
@@ -261,10 +357,10 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <div class="work-preview work-preview--ridge">
 <div class="ridge-tape" aria-hidden="true"></div>
 <div class="ridge-inner">
-<img src="work/ridge-safety-crew/img/ridge-wave.png" alt="Ridge the buck, StoneRiver's mascot, waving" loading="lazy">
+<img src="work/ridge-safety-crew/img/ridge-wave.webp" width="460" height="782" alt="Ridge the buck, StoneRiver's mascot, waving" loading="lazy">
 <div class="ridge-copy">
 <span class="ridge-name">Ridge's Junior Safety Crew</span>
-<span class="ridge-btn">Let's go!</span>
+<span class="ridge-btn" aria-hidden="true">Let's go!</span>
 </div>
 </div>
 </div>
@@ -314,6 +410,7 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <h2 style="flex: 999 1 520px; min-width: 0; margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(48px, 7vw, 104px); line-height: 0.95; text-transform: uppercase">Tell us what's eating your time.</h2>
 <div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 14px; font-size: 19px">
 <a href="tel:+12253176653" data-goatcounter-click="call-marcus" style="color: #0E0E0C; font-weight: 600">(225) 317-6653</a>
+<a href="mailto:stoneriver.coast@gmail.com?subject=Free%20back%20office%20checkup&amp;body=Business%20name%3A%0AWhat%20kind%20of%20business%3A%0AHow%20many%20people%3A%0A%0AThe%203%20things%20that%20keep%20slipping%20through%20the%20cracks%3A%0A1.%0A2.%0A3.%0A%0AHow%20we%20keep%20track%20of%20things%20now%20(notebook%2C%20texts%2C%20spreadsheet%2C%20memory)%3A%0A" data-goatcounter-click="checkup-contact" style="text-decoration: none; background: #0E0E0C; color: #EFE7D4; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 15px; padding: 16px 28px; border-radius: 999px; min-height: 52px; box-sizing: border-box; display: inline-flex; align-items: center; align-self: flex-start">Get my free checkup</a>
 <a href="mailto:stoneriver.coast@gmail.com" data-goatcounter-click="email-marcus" style="color: #0E0E0C; font-weight: 600">stoneriver.coast@gmail.com</a>
 <span>Serving Gulfport, Biloxi, Long Beach, Pass Christian, Ocean Springs, D'Iberville, Bay St. Louis, Diamondhead and Pascagoula.</span>
 </div>
@@ -326,5 +423,6 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 </footer>
 
 </div>
+<script src="assets/js/site.js" defer></script>
 </body>
 </html>

@@ -1,11 +1,11 @@
 const POSE = {
-  wave: ["img/ridge-wave.png", "Ridge the buck waving"],
-  hips: ["img/ridge-hands-on-hips.png", "Ridge standing proud with hands on his hips"],
-  run: ["img/ridge-run.png", "Ridge running"],
-  wrench: ["img/ridge-wrench.png", "Ridge leaning on a big wrench"]
+  wave: ["img/ridge-wave.webp", "Ridge the buck waving"],
+  hips: ["img/ridge-hands-on-hips.webp", "Ridge standing proud with hands on his hips"],
+  run: ["img/ridge-run.webp", "Ridge running"],
+  wrench: ["img/ridge-wrench.webp", "Ridge leaning on a big wrench"]
 };
-const FACE_YAY = ["img/ridge-laugh.png", "img/ridge-head-wink.png", "img/ridge-head-grin.png"];
-const FACE_OOPS = "img/ridge-head-surprised.png";
+const FACE_YAY = ["img/ridge-laugh.webp", "img/ridge-head-wink.webp", "img/ridge-head-grin.webp"];
+const FACE_OOPS = "img/ridge-head-surprised.webp";
 
 /* ---------- Drawings for Part 2 (ink style) ---------- */
 const S = 'stroke="#1E1A17" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"';

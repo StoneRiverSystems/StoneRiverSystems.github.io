@@ -78,7 +78,13 @@
   @keyframes rise{0%{opacity:0;transform:translateY(0) scale(.4)}20%{opacity:1}100%{opacity:0;transform:translateY(-64px) scale(1.1) rotate(45deg)}}
 
   /* proposal + nav */
-  .proposal{background:var(--night2);color:var(--muted);text-align:center;font-size:12px;letter-spacing:.06em;padding:8px 16px}
+  .proposal{background:var(--night2);color:var(--pinkhi);text-align:center;font-size:14px;letter-spacing:.02em;line-height:1.5;padding:12px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--pink)}
+  .proposal strong{color:#fff;font-weight:600}
+  .handoff{margin-top:28px;border:.75px solid var(--line);border-radius:18px;padding:18px 20px;background:rgba(10,5,7,.5)}
+  .handoff .caps{color:var(--pink);font-size:11px}
+  .handoff ul{margin:10px 0 0;padding-left:20px;color:var(--muted);font-size:15px}
+  .handoff li{margin:4px 0}
+  .demo-msg{margin:0;text-align:center;font-size:14px;color:var(--pinkhi);min-height:1.4em}
   .proposal a{color:var(--pink)}
   header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(10,5,7,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:.75px solid var(--line)}
   .nav{display:flex;align-items:center;justify-content:space-between;gap:16px 32px;min-height:78px;flex-wrap:wrap}
@@ -122,7 +128,7 @@
   .jewel h3{margin:10px 0 6px;font-size:58px}
   .jewel p{margin:0 0 22px;color:var(--muted);font-size:16px}
   .jewel .price{display:flex;justify-content:space-between;align-items:center;border-top:.75px solid var(--line);padding-top:16px;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--pinkhi)}
-  .jewel .price a{color:var(--pink);border-bottom:.75px solid currentColor;padding-bottom:2px}
+  .jewel .price a{color:var(--pink);border-bottom:.75px solid currentColor;padding:12px 2px 4px;min-width:44px;display:inline-flex;justify-content:center}
   .jewel.star{background:linear-gradient(180deg,rgba(224,71,138,.28),rgba(224,71,138,.06));border-color:var(--pink)}
   .jewel.star .badge{position:absolute;top:18px;right:18px;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#2A0614;background:var(--gloss);border-radius:999px;padding:6px 12px}
 
@@ -152,7 +158,7 @@
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
   .step{text-align:center;padding:40px 26px;border-radius:26px;border:.75px solid var(--line);background:var(--night2)}
   .step .n{font-size:84px;display:block}
-  .step h4{margin:4px 0 10px;font-family:'Italiana',serif;font-weight:400;font-size:26px;letter-spacing:.08em}
+  .step h3{margin:4px 0 10px;font-family:'Italiana',serif;font-weight:400;font-size:26px;letter-spacing:.08em}
   .step p{margin:0;color:var(--muted);font-size:16px}
 
   /* booking */
@@ -215,7 +221,7 @@
 </style>
 </head>
 <body>
-<div class="proposal" role="note">Portfolio demo · Rosé Muse is a fictional brand · Website by <a href="../../">StoneRiver Small Business Systems</a> · <a href="../../#work">Back to our work</a></div>
+<div class="proposal" role="note"><strong>Interactive portfolio demo.</strong> Rosé Muse is a fictional business, and the booking form doesn't send anywhere. · Website by <a href="../../">StoneRiver Small Business Systems</a> · <a href="../../#work">Back to our work</a></div>
 
 <header>
   <div class="wrap nav">
@@ -336,10 +342,10 @@
         <h2>From request to <span class="chrome">radiant</span></h2>
       </div>
       <div class="steps">
-        <div class="step"><span class="n chrome">1</span><h4>Request</h4><p>Pick your date and service in the form below.</p></div>
-        <div class="step"><span class="n chrome">2</span><h4>Secure</h4><p>Your date is locked in with a deposit.</p></div>
-        <div class="step"><span class="n chrome">3</span><h4>Consult</h4><p>Share your inspo. Brides get a private trial.</p></div>
-        <div class="step"><span class="n chrome">4</span><h4>Shine</h4><p>She comes to you and you leave camera-ready.</p></div>
+        <div class="step"><span class="n chrome">1</span><h3>Request</h3><p>Pick your date and service in the form below.</p></div>
+        <div class="step"><span class="n chrome">2</span><h3>Secure</h3><p>Your date is locked in with a deposit.</p></div>
+        <div class="step"><span class="n chrome">3</span><h3>Consult</h3><p>Share your inspo. Brides get a private trial.</p></div>
+        <div class="step"><span class="n chrome">4</span><h3>Shine</h3><p>She comes to you and you leave camera-ready.</p></div>
       </div>
     </div>
   </section>
@@ -359,6 +365,15 @@
           <div><span class="caps">Email</span><span>hello@rosemuse.example</span></div>
           <div><span class="caps">Instagram</span><span>@rosemuse.demo</span></div>
           <div><span class="caps">Travels to</span><span>The Gulf Coast &amp; beyond</span></div>
+        </div>
+        <div class="handoff">
+          <span class="caps">On a real client site, we also set up</span>
+          <ul>
+            <li>Requests delivered to her inbox or booking app</li>
+            <li>An automatic confirmation to the client</li>
+            <li>A privacy note on how her clients' info is used</li>
+            <li>Testing on iPhone and Android before launch</li>
+          </ul>
         </div>
       </div>
       <form id="book-form" aria-label="Booking request">
@@ -384,7 +399,8 @@
           <div class="rise" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="shadow" aria-hidden="true"></div>
         </div>
-        <p class="fine">Demo form: on a client site this goes straight to her inbox or booking app.</p>
+        <p class="demo-msg" id="demo-msg" role="status" aria-live="polite"></p>
+        <p class="fine">Demo form: nothing you type here is sent or saved.</p>
       </form>
     </div>
   </section>
