@@ -48,6 +48,47 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 @media (max-width:400px){
  #top > div > p:first-child{letter-spacing:0.16em !important;font-size:12px !important}
 }
+/* Our work */
+.work-wrap{max-width:1240px;margin:0 auto;padding:96px 24px}
+.work-h2{margin:0 0 12px;font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(44px,6vw,80px);line-height:1;text-transform:uppercase}
+.work-lede{margin:0 0 48px;max-width:38em;opacity:.85}
+.work-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;gap:24px;align-items:stretch}
+.work-card{box-sizing:border-box;display:flex;flex-direction:column;border:2px solid #EFE7D4;border-radius:20px;overflow:hidden;min-width:0}
+.work-preview{box-sizing:border-box;flex:none;height:300px;border-bottom:2px solid #EFE7D4;overflow:hidden}
+.work-preview--rose{background:#0A0507;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:24px;text-align:center}
+.rose-top{font-family:'Italiana',serif;font-size:18px;letter-spacing:.9em;margin-right:-.9em;color:#FFD6E7}
+.rose-name{font-family:'Carattere',cursive;font-size:104px;line-height:1.05;color:#F2A7C3;padding:0 .3em}
+.rose-tag{font-size:12px;letter-spacing:.36em;text-transform:uppercase;color:#FFB8D3}
+.rose-btn{margin-top:14px;background:#F7A2C6;color:#2A0614;border-radius:999px;padding:12px 28px;font-size:12px;font-weight:600;letter-spacing:.3em;text-transform:uppercase}
+.work-preview--ridge{background:#FFC21A;display:flex;flex-direction:column}
+.ridge-tape{height:18px;flex:none;background:repeating-linear-gradient(-45deg,#1E1A17 0 14px,#FFC21A 14px 28px)}
+.ridge-inner{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;gap:20px;padding:16px 24px}
+.ridge-inner img{height:236px;width:auto;max-width:45%;object-fit:contain}
+.ridge-copy{display:flex;flex-direction:column;gap:12px;min-width:0}
+.ridge-name{font-family:'Lilita One',sans-serif;font-size:34px;line-height:1.05;color:#1F3A5F}
+.ridge-btn{align-self:flex-start;font-family:'Lilita One',sans-serif;font-size:16px;letter-spacing:1px;color:#fff;background:#F26B1D;border:3px solid #1E1A17;border-radius:12px;padding:8px 16px}
+.work-body{flex:1;display:flex;flex-direction:column;gap:12px;padding:28px}
+.work-kicker{margin:0;font-size:13px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;opacity:.8}
+.work-title{margin:0;font-family:'Anton',sans-serif;font-weight:400;font-size:34px;text-transform:uppercase;line-height:1.05}
+.work-text{margin:0;opacity:.85}
+.work-note{margin:0;font-size:14px;opacity:.7}
+.work-link{margin-top:auto;align-self:flex-start;text-decoration:none;border:2px solid #EFE7D4;border-radius:999px;padding:12px 22px;min-height:48px;box-sizing:border-box;display:inline-flex;align-items:center;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:14px}
+.work-link:hover{background:#EFE7D4;color:#0E0E0C}
+.work-body .work-note + .work-link{margin-top:auto}
+@media (max-width:860px){
+ .work-grid{grid-template-columns:minmax(0,1fr)}
+ .work-wrap{padding:72px 20px}
+}
+@media (max-width:480px){
+ .work-preview{height:240px}
+ .rose-name{font-size:80px}
+ .rose-tag{font-size:11px;letter-spacing:.2em;white-space:nowrap}
+ .ridge-inner{gap:12px;padding:12px 16px}
+ .ridge-inner img{height:190px}
+ .ridge-name{font-size:26px}
+ .work-body{padding:22px}
+ .work-title{font-size:30px}
+}
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"StoneRiver Holdings","alternateName":"StoneRiver Holdings · Small Business Systems","url":"https://stoneriversystems.github.io/","telephone":"+1-225-317-6653","email":"stoneriver.coast@gmail.com","description":"Back-office systems for small businesses on the Mississippi Gulf Coast: job & invoice trackers, supply & inventory trackers, written procedures, and website & Google listing refreshes.","areaServed":["Gulfport, MS","Biloxi, MS","Long Beach, MS","Pass Christian, MS","Ocean Springs, MS","D'Iberville, MS","Bay St. Louis, MS","Diamondhead, MS","Pascagoula, MS"],"priceRange":"$75-$500"}</script>
 <!-- Visitor counts: GoatCounter (no cookies, no personal data). Script hosted on this site. -->
@@ -195,44 +236,44 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 </section>
 
 <section id="work" style="border-top: 2px solid #EFE7D4">
-<div style="max-width: 1240px; margin: 0 auto; padding: 96px 24px">
-<h2 style="margin: 0 0 12px; font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(44px, 6vw, 80px); line-height: 1; text-transform: uppercase">Our work</h2>
-<p style="margin: 0 0 48px; max-width: 38em; opacity: 0.85">Two samples of what we build: a booking website for a beauty business, and an interactive safety game starring our own mascot. Click through and try them.</p>
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 24px">
+<div class="work-wrap">
+<h2 class="work-h2">Our work</h2>
+<p class="work-lede">Two samples of what we build: a booking website for a beauty business, and an interactive safety game starring our own mascot. Click through and try them.</p>
+<div class="work-grid">
 
-<article style="border: 2px solid #EFE7D4; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
-<div style="background: #0A0507; min-height: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 32px 20px; border-bottom: 2px solid #EFE7D4; text-align: center">
-<span style="font-family: 'Italiana', serif; font-size: 18px; letter-spacing: 0.9em; margin-right: -0.9em; color: #FFD6E7">ROSÉ</span>
-<span style="font-family: 'Carattere', cursive; font-size: 104px; line-height: 1.1; color: #F2A7C3; padding: 0 0.3em">Muse</span>
-<span style="font-size: 12px; letter-spacing: 0.42em; text-transform: uppercase; color: #FFB8D3">Makeup artistry that shines</span>
-<span style="margin-top: 18px; background: #F7A2C6; color: #2A0614; border-radius: 999px; padding: 12px 28px; font-size: 12px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase">Book your glam</span>
+<article class="work-card">
+<div class="work-preview work-preview--rose">
+<span class="rose-top">ROSÉ</span>
+<span class="rose-name">Muse</span>
+<span class="rose-tag">Makeup artistry that shines</span>
+<span class="rose-btn">Book your glam</span>
 </div>
-<div style="padding: 28px; display: flex; flex-direction: column; gap: 12px; flex: 1">
-<p style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; opacity: 0.8">Website · Beauty</p>
-<h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 34px; text-transform: uppercase; line-height: 1.05">Rosé Muse</h3>
-<p style="margin: 0; opacity: 0.85">A booking site for a makeup artist: service menu with prices, photo gallery, artist bio and a booking request form. Optimized for mobile.</p>
-<p style="margin: 0; font-size: 14px; opacity: 0.7">Demo brand. Rosé Muse is fictional.</p>
-<a href="work/rose-muse/" data-goatcounter-click="work-rose-muse" style="margin-top: auto; align-self: flex-start; text-decoration: none; border: 2px solid #EFE7D4; border-radius: 999px; padding: 12px 22px; min-height: 48px; box-sizing: border-box; display: inline-flex; align-items: center; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 14px">See the site</a>
+<div class="work-body">
+<p class="work-kicker">Website · Beauty</p>
+<h3 class="work-title">Rosé Muse</h3>
+<p class="work-text">A booking site for a makeup artist: service menu with prices, photo gallery, artist bio and a booking request form. Optimized for mobile.</p>
+<p class="work-note">Demo brand. Rosé Muse is fictional.</p>
+<a class="work-link" href="work/rose-muse/" data-goatcounter-click="work-rose-muse">See the site</a>
 </div>
 </article>
 
-<article style="border: 2px solid #EFE7D4; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
-<div style="background: #FFC21A; min-height: 280px; display: flex; flex-direction: column; border-bottom: 2px solid #EFE7D4">
-<div style="height: 18px; background: repeating-linear-gradient(-45deg, #1E1A17 0 14px, #FFC21A 14px 28px)"></div>
-<div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px">
-<img src="work/ridge-safety-crew/img/ridge-wave.png" width="277" height="460" alt="Ridge the buck, StoneRiver's mascot, waving" loading="lazy" style="height: 210px; width: auto; max-width: 45%; object-fit: contain">
-<div style="display: flex; flex-direction: column; gap: 10px; min-width: 0">
-<span style="font-family: 'Lilita One', sans-serif; font-size: 34px; line-height: 1.05; color: #1F3A5F">Ridge's Safety Crew</span>
-<span style="align-self: flex-start; font-family: 'Lilita One', sans-serif; font-size: 16px; letter-spacing: 1px; color: #ffffff; background: #F26B1D; border: 3px solid #1E1A17; border-radius: 12px; padding: 8px 16px">Let's go!</span>
+<article class="work-card">
+<div class="work-preview work-preview--ridge">
+<div class="ridge-tape" aria-hidden="true"></div>
+<div class="ridge-inner">
+<img src="work/ridge-safety-crew/img/ridge-wave.png" alt="Ridge the buck, StoneRiver's mascot, waving" loading="lazy">
+<div class="ridge-copy">
+<span class="ridge-name">Ridge's Junior Safety Crew</span>
+<span class="ridge-btn">Let's go!</span>
 </div>
 </div>
 </div>
-<div style="padding: 28px; display: flex; flex-direction: column; gap: 12px; flex: 1">
-<p style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; opacity: 0.8">Interactive game · Safety</p>
-<h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 34px; text-transform: uppercase; line-height: 1.05">Ridge's Safety Crew</h3>
-<p style="margin: 0; opacity: 0.85">A two-part kids' safety game hosted by Ridge, our mascot. Kids learn about power lines, gas smells, calling 811 and how to spot utilities, then print their own Junior Safety Crew badge.</p>
-<p style="margin: 0; font-size: 14px; opacity: 0.7">Collects no personal information.</p>
-<a href="work/ridge-safety-crew/" data-goatcounter-click="work-ridge-game" style="margin-top: auto; align-self: flex-start; text-decoration: none; border: 2px solid #EFE7D4; border-radius: 999px; padding: 12px 22px; min-height: 48px; box-sizing: border-box; display: inline-flex; align-items: center; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 14px">Play the game</a>
+<div class="work-body">
+<p class="work-kicker">Interactive game · Safety</p>
+<h3 class="work-title">Ridge's Junior Safety Crew</h3>
+<p class="work-text">A two-part kids' safety game hosted by Ridge, our mascot. Kids learn about power lines, gas smells, calling 811 and spotting utilities, then print a Junior Safety Crew badge.</p>
+<p class="work-note">Collects no personal information.</p>
+<a class="work-link" href="work/ridge-safety-crew/" data-goatcounter-click="work-ridge-game">Play the game</a>
 </div>
 </article>
 

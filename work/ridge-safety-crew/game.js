@@ -154,8 +154,7 @@ function intro() {
   state = { screen: "intro", part: 1, i: 0, s1: 0, s2: 0, answered: false, name: state.name || "" };
   setRidge(POSE.wave);
   $content.innerHTML = `
-    <div class="label">Junior Safety Crew</div>
-    <h1>Ridge's Safety Crew</h1>
+    <h1>Ridge's Junior Safety Crew</h1>
     <div class="bubble">Hey there, partner! I'm Ridge, StoneRiver's safety buck. Pass my 2-part safety test and earn your Junior Safety Crew badge!</div>
     <div class="parts">
       <div><b>Part 1: Safe Choices</b>What should you do? ${PART1.length} questions</div>
