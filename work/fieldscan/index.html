@@ -10,7 +10,7 @@
 <title>StoneRiver Fieldscan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&family=Caveat:wght@600&display=swap">
 <style>
   /* Layout: one screen, no page scroll. Phone/tablet portrait: ticket bar, scope (graph, guidance, readings), controls at thumb height.
      Wide screens: scope on the left, controls on the right. Secondary detail lives in sheets. */
@@ -202,7 +202,9 @@
   .rp-table i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: 0; }
   .rp-note { font-size: 12px; color: var(--sub); margin: 0; }
   .rp-sign { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; padding-top: 28px; }
-  .rp-sign span { border-top: 1px solid var(--pink); padding-top: 4px; font-size: 11.5px; color: var(--sub); }
+  .rp-sign span { border-top: 1px solid var(--pink); padding-top: 4px; font-size: 11.5px; color: var(--sub); position: relative; }
+  .rp-sign span[data-sig]::before { content: attr(data-sig); position: absolute; left: 2px; bottom: calc(100% + 2px); font: 600 26px/1 Caveat, "Brush Script MT", cursive; color: var(--pink); white-space: nowrap; }
+  .signrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; } .signrow input { color: var(--pink); background: var(--paper); border-color: var(--rule); }
   .sheet .msg { color: #16794b; }
   .route { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
   .route li { display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 12px; position: relative; padding-bottom: 14px; }
@@ -221,6 +223,8 @@
   .phbtns { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
   .phbtns .btn { padding: 6px 10px; min-height: 36px; font-size: 12.5px; }
   .resp { display: grid; gap: 6px; }
+  .rrow { display: grid; gap: 4px; } .rrow input { padding: 7px 9px; font-size: 12.5px; }
+  label.inline { display: flex; align-items: center; gap: 6px; } label.inline select { width: auto; padding: 6px 8px; font-size: 12.5px; }
   .resp label { display: grid; grid-template-columns: 10px minmax(0, 7em) minmax(0, 1fr); gap: 10px; align-items: center; color: var(--ink); font-size: 14px; }
   .resp label i { width: 10px; height: 10px; border-radius: 3px; }
   .resp select { padding: 8px; }
@@ -320,15 +324,17 @@
     <div class="cal" id="cal" role="grid" aria-label="Month calendar"></div>
     <div class="row" style="justify-content:space-between;align-items:center">
       <h3 class="sub" id="day-title" style="margin:0"></h3>
-      <div class="row" style="gap:6px"><button type="button" class="btn small" id="view-month" aria-pressed="false">Whole month</button><button type="button" class="btn small" id="plan-add">Add ticket</button></div>
+      <div class="row" style="gap:6px"><button type="button" class="btn small" id="view-hist" aria-pressed="true">Field log</button><button type="button" class="btn small" id="view-month" aria-pressed="false">Whole month</button><button type="button" class="btn small" id="plan-add">Add ticket</button></div>
     </div>
     <form class="pform" id="pform" hidden>
       <div class="two">
+        <label>Called in<input id="pf-called" type="datetime-local"></label>
         <label>Due date<input id="pf-due" type="date" required></label>
         <label>Ticket number<input id="pf-ticket" inputmode="numeric" placeholder="811 ticket #" required></label>
         <label>Site<input id="pf-site" placeholder="Address"></label>
         <label>Locate for<input id="pf-for" placeholder="Excavator / company"></label>
       </div>
+      <p class="fine" id="pf-legal"></p>
       <label class="chk"><input id="pf-red" type="checkbox"> Red ticket (priority)</label>
       <div class="kind" id="pf-need" role="group" aria-label="Utilities on this ticket"></div>
       <div class="row"><button type="submit" class="btn small">Save ticket</button><button type="button" class="btn small" id="pf-cancel">Cancel</button></div>
@@ -352,7 +358,8 @@
     </div>
     <label>Notes<textarea id="tnote" maxlength="1000" rows="3" placeholder="e.g. hooked onto tracer wire at the meter, gate locked, dog in yard"></textarea></label>
     <div id="respwrap" hidden>
-      <p class="fine" style="margin-bottom:6px">Response by utility</p>
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px"><p class="fine">Response by utility</p>
+        <label class="inline">Codes<select id="codeset"><option value="ms">Mississippi 811</option><option value="in">Indiana 811</option><option value="gen">Generic</option></select></label></div>
       <div class="resp" id="resp"></div>
     </div>
     <section id="p-log" style="display:grid;gap:10px">
@@ -379,8 +386,10 @@
     <label style="color:var(--sub)">Day<select id="rc-day" style="color:var(--pink);background:var(--paper);border-color:var(--rule)"></select></label>
     <dl class="rp-meta" id="rc-meta"></dl>
     <ol class="route" id="rc-route" aria-label="Tickets worked"></ol>
-    <div class="rp-sign"><span>Technician signature</span><span>Date</span></div>
-    <div class="rp-sign" style="padding-top:18px"><span>Supervisor review</span><span>Date</span></div>
+    <div class="signrow"><input id="rc-tname" placeholder="Technician: type your name to sign" maxlength="80" aria-label="Technician name"><button type="button" class="btn small" id="rc-tsign">Sign</button></div>
+    <div class="signrow"><input id="rc-sname" placeholder="Supervisor: type your name to sign" maxlength="80" aria-label="Supervisor name"><button type="button" class="btn small" id="rc-ssign">Sign</button></div>
+    <div class="rp-sign"><span id="rc-tline">Technician signature</span><span id="rc-tdate">Date</span></div>
+    <div class="rp-sign" style="padding-top:34px"><span id="rc-sline">Supervisor review</span><span id="rc-sdate">Date</span></div>
     <p class="rp-note">Service record of tickets worked and utilities marked. Times are from the device. Demo readings are simulated.</p>
     <div class="row"><button type="button" class="btn small" id="rc-copy">Copy field log</button><button type="button" class="btn small" id="rc-print" hidden>Print</button></div>
     <p class="msg" id="rc-msg"></p>
@@ -393,7 +402,8 @@
     <dl class="rp-meta" id="rp-meta"></dl>
     <div class="rp-wrap"><table class="rp-table"><thead><tr><th>#</th><th>Utility</th><th>Method</th><th>Depth</th><th>Current</th><th>Freq</th><th>Time</th></tr></thead><tbody id="rp-rows"></tbody></table></div>
     <p class="rp-note" id="rp-missing"></p>
-    <div class="rp-sign"><span>Locator signature</span><span>Date</span></div>
+    <div class="signrow"><input id="rp-name" placeholder="Locator: type your name to sign" maxlength="80" aria-label="Locator name"><button type="button" class="btn small" id="rp-sign">Sign</button></div>
+    <div class="rp-sign"><span id="rp-line">Locator signature</span><span id="rp-date">Date</span></div>
     <p class="rp-note">Marks are paint and flags in the field, made to APWA colors. Excavator must respect the tolerance zone and hand-dig to expose before using power equipment. Demo readings are simulated.</p>
     <div class="row"><button type="button" class="btn small" id="report-copy">Copy report text</button><button type="button" class="btn small" id="rp-print" hidden>Print</button></div>
     <p class="msg" id="rp-msg"></p>
@@ -413,7 +423,20 @@
   ];
   let kind = 0, freq = '33 kHz', site = null, method = 'Direct connect';
   const METHODS = ['Direct connect', 'Clamp', 'Induction', 'Sonde'];
-  const RESP = ['Marked', 'Clear / no conflict', 'Unable to locate', 'Not complete'];
+  /* Positive response code sets. Codes differ by one-call center; open codes mean the excavator must wait. */
+  const CODESETS = {
+    ms: { name: 'Mississippi 811', marked: 'Located', codes: [['Located', 0], ['Clear (no conflict)', 0], ['On-site meeting request', 1], ['Locate delayed', 1]] },
+    in: { name: 'Indiana 811', marked: '1 Marked', codes: [['1 Marked', 0], ['1A Marked, high-profile: do not excavate', 0], ['1B Marked, high-profile nearby', 0], ['1C Owner or its contractor locating', 0],
+      ['2 Clear', 0], ['3A Unmarked: no access to property', 0], ['3B Unmarked: incorrect address', 0], ['3C Unmarked: marking delay', 1], ['3D Unmarked: instructions unclear', 0],
+      ['3E Unmarked: already dug or canceled', 0], ['3F Unmarked: line is untonable', 1], ['3G Unmarked: ongoing', 1], ['4 Private line', 0], ['5A Design: documents provided', 0],
+      ['5B Design: marked', 0], ['6A Joint meet conflict', 1], ['6B Joint meet accepted', 1], ['6C Joint meet complete', 0], ['7 Damage acknowledged', 0]] },
+    gen: { name: 'Generic', marked: 'Marked', codes: [['Marked', 0], ['Clear / no conflict', 0], ['Unable to locate', 1], ['Not complete', 1]] }
+  };
+  const ALLCODES = new Map(Object.values(CODESETS).flatMap(cs => cs.codes));
+  const RESP = [...ALLCODES.keys()];
+  let codeset = 'ms';
+  try { const cs0 = localStorage.getItem('fs-codeset'); if (CODESETS[cs0]) codeset = cs0; } catch (e) {}
+  const isOpen = v => v === 'Pending' || ALLCODES.get(v) === 1;
   const MATS = [['Steel', 'PE with tracer'], ['Copper cable'], ['Copper / fiber with tracer'], ['Ductile iron', 'PVC with tracer', 'PVC, no tracer'], ['Clay', 'PVC'], ['PVC with tracer']];
   // How much of the transmitter signal actually lands on the target, by method and pipe material.
   function mult(k, m) {
@@ -606,20 +629,31 @@
   const save = () => { try { localStorage.setItem('fs-log', JSON.stringify(log)); localStorage.setItem('fs-ticket', $('ticket').value); localStorage.setItem('fs-site', $('site').value); localStorage.setItem('fs-for', $('forwho').value); localStorage.setItem('fs-by', $('bywho').value); } catch (e) {} };
   // Ticket utilities appear once the ticket number is entered.
   /* Response by utility (positive response): Marked fills in automatically once a utility has a mark. */
+  // Each response is { v: code, c: comment, at: time }. Marked fills in automatically once a utility has a mark.
+  const cleanResp = o => { const out = {}; if (o && typeof o === 'object') for (const [k, x] of Object.entries(o)) { if (!/^[0-5]$/.test(k)) continue;
+      const e = typeof x === 'string' ? { v: x } : x; if (e && RESP.includes(e.v)) out[k] = { v: e.v, c: str(e.c, 200), at: finite(e.at) ? e.at : null }; } return out; };
   let resp = {};
-  try { const r0 = JSON.parse(localStorage.getItem('fs-resp') || '{}'); if (r0 && typeof r0 === 'object') for (const [k, v] of Object.entries(r0)) if (/^[0-5]$/.test(k) && RESP.includes(v)) resp[k] = v; } catch (e) {}
+  try { resp = cleanResp(JSON.parse(localStorage.getItem('fs-resp') || '{}')); } catch (e) {}
   const saveResp = () => { try { localStorage.setItem('fs-resp', JSON.stringify(resp)); } catch (e) {} };
-  const respOf = (k, r, marks) => r[k] || (marks.some(p => p.k === k) ? 'Marked' : 'Pending');
+  const autoMarked = () => CODESETS[codeset].marked;
+  const respOf = (k, r, marks) => (r[k] && r[k].v) || (marks.some(p => p.k === k) ? autoMarked() : 'Pending');
+  const respText = (k, r, marks) => { const e = r[k]; const v = respOf(k, r, marks); return `${v}${e && e.c ? ` (${e.c})` : ''}${e && e.at ? ` @ ${new Date(e.at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : ''}`; };
   function renderResp() {
     if (!$('resp')) return;
-    $('resp').replaceChildren(...need.map(k => { const lab = el('label'), dot = el('i'), name = el('span'), sel = el('select');
+    $('codeset').value = codeset;
+    $('resp').replaceChildren(...need.map(k => { const wrap = el('div', 'rrow'), lab = el('label'), dot = el('i'), name = el('span'), sel = el('select'), cm = el('input');
       dot.style.background = `rgb(${KINDS[k][1]})`; name.textContent = KINDS[k][0];
       const cur = respOf(k, resp, log); const pend = el('option'); pend.value = ''; pend.textContent = 'Pending'; sel.append(pend);
-      RESP.forEach(v => { const o = el('option'); o.value = v; o.textContent = v; sel.append(o); });
+      const opts = CODESETS[codeset].codes.map(c => c[0]); if (cur !== 'Pending' && !opts.includes(cur)) opts.unshift(cur);
+      opts.forEach(v => { const o = el('option'); o.value = v; o.textContent = v + (ALLCODES.get(v) ? ' (open)' : ''); sel.append(o); });
       sel.value = cur === 'Pending' ? '' : cur; sel.classList.toggle('pending', cur === 'Pending'); sel.setAttribute('aria-label', `${KINDS[k][0]} response`);
-      sel.addEventListener('change', () => { if (sel.value) resp[k] = sel.value; else delete resp[k]; saveResp(); renderResp(); });
-      lab.append(dot, name, sel); return lab; }));
+      sel.addEventListener('change', () => { if (sel.value) resp[k] = { v: sel.value, c: resp[k]?.c || '', at: Date.now() }; else delete resp[k]; saveResp(); renderResp(); });
+      cm.placeholder = 'Response comment'; cm.maxLength = 200; cm.value = resp[k]?.c || ''; cm.setAttribute('aria-label', `${KINDS[k][0]} response comment`);
+      cm.addEventListener('input', () => { const e = resp[k] || { v: respOf(k, resp, log) === 'Pending' ? '' : respOf(k, resp, log), c: '', at: null };
+        e.c = cm.value.slice(0, 200); if (!e.v) { e.v = ''; } if (e.v) { resp[k] = e; if (!e.at) e.at = Date.now(); saveResp(); } });
+      lab.append(dot, name, sel); wrap.append(lab, cm); return wrap; }));
   }
+  document.getElementById('codeset').addEventListener('change', e => { if (CODESETS[e.target.value]) { codeset = e.target.value; try { localStorage.setItem('fs-codeset', codeset); } catch (x) {} renderResp(); } });
   const gate = () => { const on = !!$('ticket').value.trim(); $('needwrap').hidden = !on; $('respwrap').hidden = !on; if (typeof updateBar === 'function') updateBar(); };
   ['ticket', 'site', 'forwho', 'bywho'].forEach(id => $(id).addEventListener('input', () => { save(); gate(); }));
   gate();
@@ -868,8 +902,29 @@
     const first = log.length ? new Date(Math.min(...log.map(p => p.at))) : now;
     return { now, meta: [['811 ticket', $('ticket').value || '—'], ['Site', $('site').value || '—'], ['Locate for', $('forwho').value || '—'], ['Located by', $('bywho').value || '—'],
       ['Date', fmtD(now)], ['Time', log.length ? `${fmtT(first)} to ${fmtT(now)}` : fmtT(now)], ['Utilities on ticket', need.map(k => KINDS[k][0]).join(', ')], ['Points marked', String(log.length)]],
-      responses: need.map(k => [KINDS[k][0], respOf(k, resp, log)]), fmtT };
+      responses: need.map(k => [KINDS[k][0], respText(k, resp, log), respOf(k, resp, log)]), fmtT };
   }
+  /* Typed signatures: a ticket's locator signature, and a day's technician and supervisor sign-off. */
+  let rsig = {}, dsig = {};
+  const cleanSig = o => o && typeof o === 'object' && typeof o.name === 'string' && o.name.trim() ? { name: str(o.name, 80), at: finite(o.at) ? o.at : Date.now() } : null;
+  try { const a = JSON.parse(localStorage.getItem('fs-rsig') || '{}'); for (const [k, v] of Object.entries(a || {})) { const c = cleanSig(v); if (c && /^t[a-z0-9]{4,22}$/.test(k)) rsig[k] = c; } } catch (e) {}
+  try { const a = JSON.parse(localStorage.getItem('fs-dsig') || '{}'); for (const [k, v] of Object.entries(a || {})) if (/^\d{4}-\d{2}-\d{2}$/.test(k) && v) dsig[k] = { tech: cleanSig(v.tech), sup: cleanSig(v.sup) }; } catch (e) {}
+  const saveSigs = () => { try { localStorage.setItem('fs-rsig', JSON.stringify(rsig)); localStorage.setItem('fs-dsig', JSON.stringify(dsig)); } catch (e) {} };
+  const sigDate = at => new Date(at).toLocaleString([], { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+  function paintSig(line, date, sg, label) {
+    if (sg) { line.dataset.sig = sg.name; line.textContent = `${label}: signed by typed name`; date.textContent = sigDate(sg.at); }
+    else { delete line.dataset.sig; line.textContent = label; date.textContent = 'Date'; }
+  }
+  function paintReportSig() { paintSig($('rp-line'), $('rp-date'), rsig[tid], 'Locator signature'); $('rp-name').value = rsig[tid]?.name || $('bywho').value; }
+  $('rp-sign').addEventListener('click', () => { const n = $('rp-name').value.trim(); if (!n) { $('rp-msg').textContent = 'Type your name to sign.'; return; }
+    rsig[tid] = { name: n.slice(0, 80), at: Date.now() }; saveSigs(); paintReportSig(); $('rp-msg').textContent = 'Signed'; });
+  function paintDaySig() { const day = $('rc-day').value, g = dsig[day] || {};
+    paintSig($('rc-tline'), $('rc-tdate'), g.tech, 'Technician signature'); paintSig($('rc-sline'), $('rc-sdate'), g.sup, 'Supervisor review');
+    $('rc-tname').value = g.tech?.name || $('bywho').value; $('rc-sname').value = g.sup?.name || ''; }
+  [['rc-tsign', 'rc-tname', 'tech'], ['rc-ssign', 'rc-sname', 'sup']].forEach(([b, i, who]) => $(b).addEventListener('click', () => {
+    const n = $(i).value.trim(), day = $('rc-day').value; if (!n) { $('rc-msg').textContent = 'Type a name to sign.'; return; }
+    dsig[day] = { ...(dsig[day] || {}), [who]: { name: n.slice(0, 80), at: Date.now() } }; saveSigs(); paintDaySig(); $('rc-msg').textContent = 'Signed'; }));
+
   function openReport() {
     const d = reportData();
     $('rp-meta').replaceChildren(...d.meta.map(([k, v]) => { const w = el('div'), dt = el('dt'), dd = el('dd'); dt.textContent = k; dd.textContent = v; w.append(dt, dd); return w; }));
@@ -877,8 +932,8 @@
       const cells = [String(i + 1) + (p.edited ? '*' : ''), kn, p.method || '–', p.depth != null ? ftIn(p.depth) : '–', p.cur != null ? `${Math.round(p.cur)} mA` : '–', p.freq || '–', d.fmtT(new Date(p.at))];
       cells.forEach((c, j) => { const td = el('td'); if (j === 1) td.append(dot); td.append(c); tr.append(td); }); return tr; })
       : [(() => { const tr = el('tr'), td = el('td'); td.colSpan = 7; td.textContent = 'No points marked.'; tr.append(td); return tr; })()]));
-    $('rp-missing').textContent = (log.some(p => p.edited) ? '* Edited by hand after marking. ' : '') + 'Response: ' + d.responses.map(([n, v]) => `${n} ${v}`).join(' · ') + (d.responses.some(([, v]) => v === 'Pending' || v === 'Not complete') ? '. Ticket not complete.' : '. Ticket complete.');
-    $('rp-msg').textContent = ''; lastFocus = document.activeElement; $('report').hidden = false; $('report-close').focus();
+    $('rp-missing').textContent = (log.some(p => p.edited) ? '* Edited by hand after marking. ' : '') + 'Response: ' + d.responses.map(([n, v]) => `${n} ${v}`).join(' · ') + (d.responses.some(([, , v]) => isOpen(v)) ? '. Ticket not complete.' : '. Ticket complete.') + ` Codes: ${CODESETS[codeset].name}.`;
+    $('rp-msg').textContent = ''; paintReportSig(); lastFocus = document.activeElement; $('report').hidden = false; $('report-close').focus();
   }
   function closeReport() { $('report').hidden = true; if (lastFocus) lastFocus.focus(); }
   $('report-open').addEventListener('click', openReport);
@@ -888,7 +943,7 @@
   $('report-copy').addEventListener('click', async () => {
     const d = reportData(), lines = ['STONERIVER FIELDSCAN — LOCATE REPORT', ...d.meta.map(([k, v]) => `${k}: ${v}`), '',
       ...log.map((p, i) => `${i + 1}. ${kindOf(p.k)[0]}  ${p.method}  ${p.depth != null ? ftIn(p.depth) : '–'}  ${p.cur != null ? Math.round(p.cur) + ' mA' : ''}  ${p.freq}  ${d.fmtT(new Date(p.at))}`),
-      '', 'Response: ' + d.responses.map(([n, v]) => `${n} ${v}`).join(', '), '', 'Locator signature: ____________________   Date: __________'];
+      '', 'Response: ' + d.responses.map(([n, v]) => `${n} ${v}`).join(', '), '', (rsig[tid] ? `Locator signature: /s/ ${rsig[tid].name}   ${sigDate(rsig[tid].at)}` : 'Locator signature: ____________________   Date: __________')];
     try { await navigator.clipboard.writeText(lines.join('\n')); $('rp-msg').textContent = 'Report copied'; }
     catch (e) { $('rp-msg').textContent = 'Copy is blocked in this view.'; }
   });
@@ -954,7 +1009,7 @@
   const cleanTicket = t => { if (!t || typeof t !== 'object' || !finite(t.start) || !finite(t.end)) return null;
     return { id: str(t.id, 24) || ('t' + t.start.toString(36)), ticket: str(t.ticket, 40), site: str(t.site, 120), forwho: str(t.forwho, 80), bywho: str(t.bywho, 80),
       need: Array.isArray(t.need) ? t.need.filter(k => Number.isInteger(k) && k >= 0 && k < KINDS.length) : [],
-      resp: Object.fromEntries(Object.entries(t.resp && typeof t.resp === 'object' ? t.resp : {}).filter(([k, v]) => /^[0-5]$/.test(k) && RESP.includes(v))),
+      resp: cleanResp(t.resp), sig: t.sig && typeof t.sig === 'object' ? { name: str(t.sig.name, 80), at: finite(t.sig.at) ? t.sig.at : null } : null,
       start: t.start, end: Math.max(t.start, t.end), marks: Array.isArray(t.marks) ? t.marks.map(clean).filter(Boolean).slice(0, MAX_PTS) : [] }; };
   try { const h = JSON.parse(localStorage.getItem('fs-history') || '[]'); if (Array.isArray(h)) hist = h.map(cleanTicket).filter(Boolean); } catch (e) { hist = []; }
   const saveHist = () => { const cut = Date.now() - KEEP_DAYS * 864e5; hist = hist.filter(t => t.end >= cut).slice(-MAX_HIST);
@@ -964,14 +1019,14 @@
   function currentTicket() {
     if (!log.length && !$('ticket').value.trim()) return null;
     const times = log.map(p => p.at), start = times.length ? Math.min(...times) : Date.now();
-    return cleanTicket({ id: tid, ticket: $('ticket').value, site: $('site').value, forwho: $('forwho').value, bywho: $('bywho').value, need, resp, start, end: times.length ? Math.max(...times) : start, marks: log });
+    return cleanTicket({ id: tid, ticket: $('ticket').value, site: $('site').value, forwho: $('forwho').value, bywho: $('bywho').value, need, resp: Object.fromEntries(need.map(k => [k, { v: respOf(k, resp, log), c: resp[k]?.c || '', at: resp[k]?.at || null }]).filter(([, e]) => e.v !== 'Pending')), sig: rsig[tid] || null, start, end: times.length ? Math.max(...times) : start, marks: log });
   }
   const dayKey = ms => { const d = new Date(ms); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const hm = ms => new Date(ms).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
   const dur = m => m < 60 ? `${Math.round(m)} min` : `${Math.floor(m / 60)} h ${Math.round(m % 60)} min`;
   const markSum = t => t.marks.map(p => `${kindOf(p.k)[0][0]} ${p.depth != null ? ftIn(p.depth) : '–'}`).join(', ') || 'no marks';
-  const respLine = t => t.need.map(k => `${KINDS[k][0]} ${respOf(k, t.resp || {}, t.marks)}`).join(' · ');
-  const ticketDone = t => t.need.every(k => !['Pending', 'Not complete'].includes(respOf(k, t.resp || {}, t.marks)));
+  const respLine = t => t.need.map(k => `${KINDS[k][0]} ${respText(k, t.resp || {}, t.marks)}`).join(' · ');
+  const ticketDone = t => t.need.every(k => !isOpen(respOf(k, t.resp || {}, t.marks)));
   function recapFor(day) {
     const open = currentTicket(), list = hist.filter(t => dayKey(t.start) === day).map(t => ({ ...t, open: false }));
     if (open && dayKey(open.start) === day) list.push({ ...open, open: true });
@@ -984,7 +1039,7 @@
     const status = t => ticketDone(t) ? 'Complete' : 'Not complete';
     const meta = [['Technician', techs], ['Date', new Date(day + 'T12:00:00').toLocaleDateString([], { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })], ['Tickets', String(list.length)], ['Complete', String(list.filter(t => status(t) === 'Complete').length)], ['Points marked', String(marks.length)],
       ['First ticket', list.length ? hm(list[0].start) : '—'], ['Last ticket', list.length ? hm(list[list.length - 1].end) : '—'],
-      ['By utility', Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(', ') || '—'], ['Unable to locate', String(list.reduce((n, t) => n + t.need.filter(k => respOf(k, t.resp || {}, t.marks) === 'Unable to locate').length, 0))]];
+      ['By utility', Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(', ') || '—'], ['Open responses', String(list.reduce((n, t) => n + t.need.filter(k => isOpen(respOf(k, t.resp || {}, t.marks))).length, 0))]];
     $('rc-meta').replaceChildren(...meta.map(([k, v]) => { const w = el('div'), dt = el('dt'), dd = el('dd'); dt.textContent = k; dd.textContent = v; w.append(dt, dd); return w; }));
     const items = [];
     list.forEach((t, i) => {
@@ -995,7 +1050,7 @@
       box.append(b, a, c, st, noteBox(t), photoRow(t)); li.append(box); items.push(li);
     });
     if (!items.length) { const li = el('li'), sm = el('small'); sm.textContent = 'No tickets on this day.'; li.append(sm); items.push(li); }
-    $('rc-route').replaceChildren(...items); $('rc-msg').textContent = '';
+    $('rc-route').replaceChildren(...items); $('rc-msg').textContent = ''; paintDaySig();
   }
   let recapFocus = null;
   function openRecap() {
@@ -1012,7 +1067,7 @@
     const day = $('rc-day').value, list = recapFor(day);
     const lines = [`STONERIVER FIELDSCAN — DAILY FIELD LOG (SERVICE REPORT) ${day}`, ...[...$('rc-meta').children].map(w => `${w.children[0].textContent}: ${w.children[1].textContent}`), ''];
     list.forEach((t, i) => { lines.push(`${i + 1}. ${hm(t.start)}–${hm(t.end)}  Ticket ${t.ticket || '—'}  ${t.site}${t.forwho ? '  for ' + t.forwho : ''}${t.open ? '  (open)' : ''}`, `   ${markSum(t)}`, `   ${ticketDone(t) ? 'Complete' : 'Not complete'}: ${respLine(t)}`, `   Photos: ${(photos[t.id] || []).length}`, ...(notes[t.id] ? [`   Notes: ${notes[t.id].replace(/\s+/g, ' ')}`] : [])); });
-    lines.push('', 'Technician signature: ____________________   Date: ________', 'Supervisor review:    ____________________   Date: ________');
+    const g = dsig[day] || {}; lines.push('', g.tech ? `Technician signature: /s/ ${g.tech.name}   ${sigDate(g.tech.at)}` : 'Technician signature: ____________________   Date: ________', g.sup ? `Supervisor review:    /s/ ${g.sup.name}   ${sigDate(g.sup.at)}` : 'Supervisor review:    ____________________   Date: ________');
     try { await navigator.clipboard.writeText(lines.join('\n')); $('rc-msg').textContent = 'Field log copied'; } catch (e) { $('rc-msg').textContent = 'Copy is blocked in this view.'; }
   });
 
@@ -1035,21 +1090,33 @@
   let plan = [], calY, calM, selDay = dayKey(Date.now()), monthView = false;
   const cleanPlan = t => { if (!t || typeof t !== 'object' || typeof t.due !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(t.due)) return null;
     return { id: /^p[a-z0-9]{4,22}$/.test(t.id) ? t.id : 'p' + Math.random().toString(36).slice(2, 10), due: t.due, ticket: str(t.ticket, 40), site: str(t.site, 120), forwho: str(t.forwho, 80),
-      red: t.red === true, done: t.done === true, need: Array.isArray(t.need) ? t.need.filter(k => Number.isInteger(k) && k >= 0 && k < KINDS.length) : [],
+      red: t.red === true, done: t.done === true, called: finite(t.called) ? t.called : null, legal: finite(t.legal) ? t.legal : null, need: Array.isArray(t.need) ? t.need.filter(k => Number.isInteger(k) && k >= 0 && k < KINDS.length) : [],
       calls: Array.isArray(t.calls) ? t.calls.filter(c => c && finite(c.at) && typeof c.text === 'string').map(c => ({ at: c.at, text: str(c.text, 300) })).slice(-50) : [] }; };
   try { const pl = JSON.parse(localStorage.getItem('fs-plan') || '[]'); if (Array.isArray(pl)) plan = pl.map(cleanPlan).filter(Boolean).slice(0, 2000); } catch (e) { plan = []; }
   const savePlan = () => { try { localStorage.setItem('fs-plan', JSON.stringify(plan)); } catch (e) { $('msg').textContent = 'Phone storage is full. Some ticket changes may not be saved.'; } };
   { const d = new Date(); calY = d.getFullYear(); calM = d.getMonth(); }
+  let showHist = true; try { showHist = localStorage.getItem('fs-showhist') !== '0'; } catch (e) {}
+  /* Legal start estimate: two full working days after the call, skipping weekends and common holidays. Rules vary by state; the ticket itself governs. */
+  function holidays(y) { const nth = (m, dow, n) => { const d = new Date(y, m, 1); let c = 0; while (true) { if (d.getDay() === dow && ++c === n) return dayKey(d.getTime()); d.setDate(d.getDate() + 1); } };
+    const last = (m, dow) => { const d = new Date(y, m + 1, 0); while (d.getDay() !== dow) d.setDate(d.getDate() - 1); return dayKey(d.getTime()); };
+    const tg = nth(10, 4, 4), tgd = new Date(tg + 'T12:00:00'); tgd.setDate(tgd.getDate() + 1);
+    return new Set([`${y}-01-01`, last(4, 1), `${y}-07-04`, nth(8, 1, 1), tg, dayKey(tgd.getTime()), `${y}-12-25`]); }
+  function legalStart(called) { const d = new Date(called), hol = new Set([...holidays(d.getFullYear()), ...holidays(d.getFullYear() + 1)]);
+    const work = x => x.getDay() !== 0 && x.getDay() !== 6 && !hol.has(dayKey(x.getTime())); let n = 0; const x = new Date(d);
+    while (n < 2) { x.setDate(x.getDate() + 1); if (work(x)) n++; } x.setHours(d.getHours(), d.getMinutes(), 0, 0); return x.getTime(); }
+  const fmtLegal = ms => new Date(ms).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  const worked = () => showHist ? hist.filter(h => !plan.some(t => t.ticket && t.ticket === h.ticket)) : [];
   const sortT = (a, b) => (a.done - b.done) || (b.red - a.red) || a.due.localeCompare(b.due) || a.ticket.localeCompare(b.ticket);
   function renderCal() {
     const first = new Date(calY, calM, 1), startDow = first.getDay(), days = new Date(calY, calM + 1, 0).getDate(), today = dayKey(Date.now());
     $('cal-month').textContent = first.toLocaleDateString([], { month: 'long', year: 'numeric' });
     const mk = `${calY}-${String(calM + 1).padStart(2, '0')}`, inMonth = plan.filter(t => t.due.startsWith(mk));
-    $('cal-sum').textContent = `${inMonth.length} tickets · ${inMonth.filter(t => t.red && !t.done).length} red open · ${inMonth.filter(t => t.done).length} done`;
+    const wkM = worked().filter(h => dayKey(h.start).startsWith(mk)).length;
+    $('cal-sum').textContent = `${inMonth.length} planned · ${inMonth.filter(t => t.red && !t.done).length} red open · ${inMonth.filter(t => t.done).length} done${showHist ? ` · ${wkM} worked from the field log` : ''}`;
     const cells = ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => { const e = el('div', 'dow'); e.textContent = d; return e; });
     for (let i = 0; i < 42; i++) {
       const d = new Date(calY, calM, 1 - startDow + i); if (i >= 35 && d.getMonth() !== calM) break;
-      const k = dayKey(d.getTime()), list = plan.filter(t => t.due === k), b = el('button'), num = el('span'), dots = el('span', 'dots');
+      const k = dayKey(d.getTime()), list = plan.filter(t => t.due === k).concat(worked().filter(h => dayKey(h.start) === k).map(h => ({ done: true, red: false }))), b = el('button'), num = el('span'), dots = el('span', 'dots');
       b.type = 'button'; b.setAttribute('role', 'gridcell'); b.setAttribute('aria-selected', k === selDay);
       b.setAttribute('aria-label', `${d.toLocaleDateString([], { month: 'short', day: 'numeric' })}, ${list.length} tickets${list.some(t => t.red && !t.done) ? ', red ticket' : ''}`);
       if (d.getMonth() !== calM) b.classList.add('out'); if (k === today) b.classList.add('today'); if (list.some(t => t.red && !t.done)) b.classList.add('red');
@@ -1062,6 +1129,7 @@
   function card(t) {
     const c = el('div', 'pcard' + (t.red ? ' red' : '') + (t.done ? ' done' : '')), top = el('div', 'top'), b = el('b'), tag = el('span', 'tag'), sm = el('small');
     b.textContent = `Ticket ${t.ticket || '—'}`; tag.textContent = t.done ? 'Done' : t.red ? 'Red ticket' : '';
+    const lg = el('small'); lg.textContent = t.legal ? `Legal start (est.) ${fmtLegal(t.legal)}` : '';
     sm.textContent = [monthView ? new Date(t.due + 'T12:00:00').toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }) : '', t.site, t.forwho && `for ${t.forwho}`, t.need.map(k => KINDS[k][0]).join(', ')].filter(Boolean).join(' · ');
     top.append(b, tag);
     const calls = el('ul', 'calls');
@@ -1077,16 +1145,25 @@
     dn.addEventListener('click', () => { t.done = !t.done; savePlan(); renderPlan(); });
     del.addEventListener('click', () => { if (del.dataset.armed) { plan = plan.filter(x => x !== t); savePlan(); renderPlan(); } else { del.dataset.armed = '1'; del.textContent = 'Tap again'; } });
     row.append(go, dn, del);
-    c.append(top, sm, calls, cr, row); return c;
+    c.append(top, sm, ...(t.legal ? [lg] : []), calls, cr, row); return c;
+  }
+  function workedCard(h) {
+    const c = el('div', 'pcard done'), top = el('div', 'top'), b = el('b'), tag = el('span', 'tag'), sm = el('small'), rs = el('small'), btn = el('button', 'btn small');
+    b.textContent = `Ticket ${h.ticket || '—'}`; tag.textContent = 'Worked'; top.append(b, tag);
+    sm.textContent = [monthView ? new Date(h.start).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }) : '', `${hm(h.start)}–${hm(h.end)}`, h.site, h.forwho && `for ${h.forwho}`].filter(Boolean).join(' · ');
+    rs.textContent = respLine(h) || markSum(h); btn.type = 'button'; btn.textContent = 'Open in Field Log';
+    btn.addEventListener('click', () => { closePlan(); openRecap(); $('rc-day').value = dayKey(h.start); renderRecap(); });
+    const row = el('div', 'row'); row.append(btn); c.append(top, sm, rs, row); return c;
   }
   function renderPlan() {
     renderCal();
     const mk = `${calY}-${String(calM + 1).padStart(2, '0')}`;
     const list = (monthView ? plan.filter(t => t.due.startsWith(mk)) : plan.filter(t => t.due === selDay)).sort(sortT);
+    const wk = worked().filter(h => monthView ? dayKey(h.start).startsWith(mk) : dayKey(h.start) === selDay).sort((a, b) => a.start - b.start);
     $('day-title').textContent = monthView ? 'Whole month' : new Date(selDay + 'T12:00:00').toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' });
-    $('view-month').setAttribute('aria-pressed', monthView);
-    if (!list.length) { const e = el('div', 'empty'); e.textContent = monthView ? 'No tickets this month yet.' : 'No tickets on this day. Tap Add ticket to plan one.'; $('plist').replaceChildren(e); }
-    else $('plist').replaceChildren(...list.map(card));
+    $('view-month').setAttribute('aria-pressed', monthView); $('view-hist').setAttribute('aria-pressed', showHist);
+    if (!list.length && !wk.length) { const e = el('div', 'empty'); e.textContent = monthView ? 'No tickets this month yet.' : 'No tickets on this day. Tap Add ticket to plan one.'; $('plist').replaceChildren(e); }
+    else $('plist').replaceChildren(...list.map(card), ...wk.map(workedCard));
   }
   function startLocate(t) {
     const cur = $('ticket').value.trim();
@@ -1103,12 +1180,16 @@
   $('cal-prev').addEventListener('click', () => { calM--; if (calM < 0) { calM = 11; calY--; } renderPlan(); });
   $('cal-next').addEventListener('click', () => { calM++; if (calM > 11) { calM = 0; calY++; } renderPlan(); });
   $('view-month').addEventListener('click', () => { monthView = !monthView; renderPlan(); });
+  $('view-hist').addEventListener('click', () => { showHist = !showHist; try { localStorage.setItem('fs-showhist', showHist ? '1' : '0'); } catch (e) {} renderPlan(); });
+  $('pf-called').addEventListener('change', () => { const v = $('pf-called').value; if (!v) { $('pf-legal').textContent = ''; return; }
+    const ls = legalStart(new Date(v).getTime()); $('pf-due').value = dayKey(ls); $('pf-legal').textContent = `Legal start (est.): ${fmtLegal(ls)}. Two working days, weekends and holidays skipped. Your ticket's own start time governs.`; });
   let pfNeed = [];
   function renderPfNeed() { $('pf-need').replaceChildren(...KINDS.map((k, i) => { const b = chip(i, pfNeed.includes(i)); b.addEventListener('click', () => { pfNeed = pfNeed.includes(i) ? pfNeed.filter(x => x !== i) : [...pfNeed, i].sort(); renderPfNeed(); }); return b; })); }
-  $('plan-add').addEventListener('click', () => { $('pform').reset(); $('pf-due').value = selDay; pfNeed = []; renderPfNeed(); $('pform').hidden = false; $('pf-ticket').focus(); });
+  $('plan-add').addEventListener('click', () => { $('pform').reset(); $('pf-legal').textContent = ''; $('pf-due').value = selDay; pfNeed = []; renderPfNeed(); $('pform').hidden = false; $('pf-ticket').focus(); });
   $('pf-cancel').addEventListener('click', () => { $('pform').hidden = true; });
   $('pform').addEventListener('submit', e => { e.preventDefault();
-    const t = cleanPlan({ due: $('pf-due').value, ticket: $('pf-ticket').value, site: $('pf-site').value, forwho: $('pf-for').value, red: $('pf-red').checked, need: pfNeed, calls: [] });
+    const cv = $('pf-called').value ? new Date($('pf-called').value).getTime() : null;
+    const t = cleanPlan({ called: cv, legal: cv ? legalStart(cv) : null, due: $('pf-due').value, ticket: $('pf-ticket').value, site: $('pf-site').value, forwho: $('pf-for').value, red: $('pf-red').checked, need: pfNeed, calls: [] });
     if (!t || !t.ticket) { $('msg').textContent = 'A ticket needs a due date and a ticket number.'; return; }
     if (plan.length >= 2000) { $('msg').textContent = 'Ticket list is full.'; return; }
     plan.push(t); savePlan(); selDay = t.due; const d = new Date(t.due + 'T12:00:00'); calY = d.getFullYear(); calM = d.getMonth(); $('pform').hidden = true; renderPlan(); });
