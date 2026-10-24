@@ -105,6 +105,7 @@
   .btn { font: 600 15px var(--font-display); border-radius: 12px; border: 1px solid var(--hair); background: none; color: var(--ink); padding: 12px 16px; cursor: pointer; min-height: 48px; transition: background-color .15s, border-color .15s, opacity .15s; }
   .btn:hover { border-color: rgba(196, 214, 220, .3); }
   .btn.mark { background: var(--line); color: #0b0f11; border-color: transparent; font-size: 16px; box-shadow: 0 6px 24px -10px var(--line); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
   .btn.mark:disabled { background: var(--raise); color: var(--dim); box-shadow: none; cursor: not-allowed; }
   .btn.small { font-size: 13px; padding: 8px 12px; min-height: 38px; border-radius: 10px; }
   .btn.quiet { font-size: 14px; min-height: 42px; padding: 9px 12px; }
@@ -1050,7 +1051,24 @@
     return { id: str(t.id, 24) || ('t' + t.start.toString(36)), ticket: str(t.ticket, 40), site: str(t.site, 120), forwho: str(t.forwho, 80), bywho: str(t.bywho, 80),
       need: Array.isArray(t.need) ? t.need.filter(k => Number.isInteger(k) && k >= 0 && k < KINDS.length) : [],
       resp: cleanResp(t.resp), sig: t.sig && typeof t.sig === 'object' ? { name: str(t.sig.name, 80), at: finite(t.sig.at) ? t.sig.at : null } : null,
-      start: t.start, end: Math.max(t.start, t.end), marks: Array.isArray(t.marks) ? t.marks.map(clean).filter(Boolean).slice(0, MAX_PTS) : [] }; };
+      start: t.start, end: Math.max(t.start, t.end), closed: finite(t.closed) ? t.closed : null, reopened: Number.isInteger(t.reopened) ? Math.min(t.reopened, 99) : 0,
+      marks: Array.isArray(t.marks) ? t.marks.map(clean).filter(Boolean).slice(0, MAX_PTS) : [] }; };
+  /* A closed ticket can be reopened for 24 hours after it was closed; after that it's locked for the record. */
+  const REOPEN_MS = 24 * 3600e3;
+  const canReopen = t => !t.open && Date.now() - (t.closed || t.end) < REOPEN_MS;
+  const lockLeft = t => { const m = Math.max(0, REOPEN_MS - (Date.now() - (t.closed || t.end))) / 6e4; const mm = Math.floor(m); return mm >= 60 ? `${Math.floor(mm / 60)} h ${mm % 60} min` : `${Math.max(1, mm)} min`; };
+  let reopenCount = 0;
+  function reopenTicket(t) {
+    if (!canReopen(t)) { $('msg').textContent = 'This ticket is locked. Tickets can only be reopened within a day of closing.'; return false; }
+    if (log.length || $('ticket').value.trim()) { $('msg').textContent = 'Close the current ticket first with New ticket, then reopen.'; return false; }
+    hist = hist.filter(h => h.id !== t.id); saveHist();
+    tid = t.id; try { localStorage.setItem('fs-tid', tid); } catch (e) {}
+    $('ticket').value = t.ticket; $('site').value = t.site; $('forwho').value = t.forwho; $('bywho').value = t.bywho;
+    log = t.marks.map(clean).filter(Boolean); need = t.need.length ? [...t.need] : need; resp = cleanResp(t.resp); reopenCount = (t.reopened || 0) + 1;
+    const pt = plan.find(x => x.ticket && x.ticket === t.ticket); if (pt) { pt.done = false; pt.doneAt = null; savePlan(); }
+    saveResp(); save(); renderKinds(); renderLog(); gate(); $('tnote').value = notes[tid] || '';
+    $('msg').textContent = `Ticket ${t.ticket || ''} reopened. Close it again with New ticket.`; return true;
+  }
   try { const h = JSON.parse(localStorage.getItem('fs-history') || '[]'); if (Array.isArray(h)) hist = h.map(cleanTicket).filter(Boolean); } catch (e) { hist = []; }
   const saveHist = () => { const cut = Date.now() - KEEP_DAYS * 864e5; hist = hist.filter(t => t.end >= cut).slice(-MAX_HIST);
     const keep = new Set([tid, ...hist.map(t => t.id)]); let pruned = false; for (const k of Object.keys(photos)) if (!keep.has(k)) { delete photos[k]; pruned = true; } if (pruned) savePhotos();
@@ -1087,7 +1105,11 @@
       b.textContent = `${hm(t.start)}${t.end > t.start ? '–' + hm(t.end) : ''} · ${t.ticket ? 'Ticket ' + t.ticket : 'No ticket #'}${t.open ? ' (open)' : ''}`;
       a.textContent = [t.site, t.forwho && `for ${t.forwho}`, t.bywho && `by ${t.bywho}`].filter(Boolean).join(' · ') || 'No site entered';
       c.textContent = markSum(t); st.textContent = `${status(t)} · ${respLine(t)}${t.end > t.start ? ' · ' + dur((t.end - t.start) / 6e4) + ' on ticket' : ''}`;
-      box.append(b, a, c, st, noteBox(t), photoRow(t)); li.append(box); items.push(li);
+      const ro = el('div', 'phbtns');
+      if (!t.open) { if (canReopen(t)) { const rb = el('button', 'btn'); rb.type = 'button'; rb.textContent = `Reopen (${lockLeft(t)} left)`; rb.addEventListener('click', () => { if (reopenTicket(t)) closeRecap(); }); ro.append(rb); }
+        else { const lk = el('small'); lk.textContent = 'Locked for the record'; ro.append(lk); } }
+      if (t.reopened) { const rn = el('small'); rn.textContent = `Reopened ${t.reopened}×`; ro.append(rn); }
+      box.append(b, a, c, st, noteBox(t), photoRow(t), ro); li.append(box); items.push(li);
     });
     if (!items.length) { const li = el('li'), sm = el('small'); sm.textContent = 'No tickets on this day.'; li.append(sm); items.push(li); }
     $('rc-route').replaceChildren(...items); $('rc-msg').textContent = ''; paintDaySig();
@@ -1116,7 +1138,8 @@
     const btn = $('newticket'), busy = log.length || $('ticket').value || $('site').value;
     if (busy && !armed) { armed = true; btn.textContent = 'Close ticket?';
       setTimeout(() => { armed = false; btn.textContent = 'New ticket'; }, 3500); return; }
-    const done = currentTicket(); if (done) { hist.push(done); saveHist(); const pt = plan.find(t => t.ticket && t.ticket === done.ticket && !t.done); if (pt) { pt.done = true; savePlan(); } }
+    const done = currentTicket(); if (done) { done.closed = Date.now(); done.reopened = reopenCount; hist.push(done); saveHist(); const pt = plan.find(t => t.ticket && t.ticket === done.ticket && !t.done); if (pt) { pt.done = true; pt.doneAt = Date.now(); savePlan(); } }
+    reopenCount = 0;
     tid = newId(); try { localStorage.setItem('fs-tid', tid); } catch (e) {} $('tnote').value = '';
     log = []; held = null; sel = -1; $('edit').hidden = true; $('ticket').value = ''; $('site').value = ''; $('forwho').value = ''; need = [0, 1, 2, 3, 4, 5]; resp = {}; saveResp(); renderKinds(); newSite(); save(); renderLog(); newLine(); gate();
     armed = false; btn.textContent = 'New ticket'; $('msg').textContent = done ? 'Ticket closed and added to the Daily Field Log. New ticket started.' : 'New ticket started'; openTicket();
@@ -1130,7 +1153,7 @@
   let plan = [], calY, calM, selDay = dayKey(Date.now()), monthView = false;
   const cleanPlan = t => { if (!t || typeof t !== 'object' || typeof t.due !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(t.due)) return null;
     return { id: /^p[a-z0-9]{4,22}$/.test(t.id) ? t.id : 'p' + Math.random().toString(36).slice(2, 10), due: t.due, ticket: str(t.ticket, 40), site: str(t.site, 120), forwho: str(t.forwho, 80),
-      red: t.red === true, done: t.done === true, called: finite(t.called) ? t.called : null, legal: finite(t.legal) ? t.legal : null, need: Array.isArray(t.need) ? t.need.filter(k => Number.isInteger(k) && k >= 0 && k < KINDS.length) : [],
+      red: t.red === true, done: t.done === true, doneAt: finite(t.doneAt) ? t.doneAt : null, called: finite(t.called) ? t.called : null, legal: finite(t.legal) ? t.legal : null, need: Array.isArray(t.need) ? t.need.filter(k => Number.isInteger(k) && k >= 0 && k < KINDS.length) : [],
       calls: Array.isArray(t.calls) ? t.calls.filter(c => c && finite(c.at) && typeof c.text === 'string').map(c => ({ at: c.at, text: str(c.text, 300) })).slice(-50) : [] }; };
   try { const pl = JSON.parse(localStorage.getItem('fs-plan') || '[]'); if (Array.isArray(pl)) plan = pl.map(cleanPlan).filter(Boolean).slice(0, 2000); } catch (e) { plan = []; }
   const savePlan = () => { try { localStorage.setItem('fs-plan', JSON.stringify(plan)); } catch (e) { $('msg').textContent = 'Phone storage is full. Some ticket changes may not be saved.'; } };
@@ -1180,9 +1203,11 @@
     add.addEventListener('click', logIt); inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); logIt(); } });
     cr.append(inp, add);
     const row = el('div', 'row'), go = el('button', 'btn small'), dn = el('button', 'btn small'), del = el('button', 'btn small danger');
-    go.type = dn.type = del.type = 'button'; go.textContent = 'Start locate'; dn.textContent = t.done ? 'Reopen' : 'Mark done'; del.textContent = 'Delete';
+    go.type = dn.type = del.type = 'button'; go.textContent = 'Start locate'; del.textContent = 'Delete';
+    const planLocked = t.done && Date.now() - (t.doneAt || 0) >= REOPEN_MS;
+    dn.textContent = t.done ? (planLocked ? 'Locked' : 'Reopen') : 'Mark done'; dn.disabled = planLocked; if (t.done) go.disabled = true;
     go.addEventListener('click', () => startLocate(t));
-    dn.addEventListener('click', () => { t.done = !t.done; savePlan(); renderPlan(); });
+    dn.addEventListener('click', () => { if (t.done && Date.now() - (t.doneAt || 0) >= REOPEN_MS) return; t.done = !t.done; t.doneAt = t.done ? Date.now() : null; savePlan(); renderPlan(); });
     del.addEventListener('click', () => { if (del.dataset.armed) { plan = plan.filter(x => x !== t); savePlan(); renderPlan(); } else { del.dataset.armed = '1'; del.textContent = 'Tap again'; } });
     row.append(go, dn, del);
     c.append(top, sm, ...(t.legal ? [lg] : []), calls, cr, row); return c;
@@ -1193,7 +1218,9 @@
     sm.textContent = [monthView ? new Date(h.start).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }) : '', `${hm(h.start)}–${hm(h.end)}`, h.site, h.forwho && `for ${h.forwho}`].filter(Boolean).join(' · ');
     rs.textContent = respLine(h) || markSum(h); btn.type = 'button'; btn.textContent = 'Open in Field Log';
     btn.addEventListener('click', () => { closePlan(); openRecap(); $('rc-day').value = dayKey(h.start); renderRecap(); });
-    const row = el('div', 'row'); row.append(btn); c.append(top, sm, rs, row); return c;
+    const row = el('div', 'row'); row.append(btn);
+    if (canReopen(h)) { const rb = el('button', 'btn small'); rb.type = 'button'; rb.textContent = 'Reopen'; rb.addEventListener('click', () => { if (reopenTicket(h)) closePlan(); else renderPlan(); }); row.append(rb); }
+    c.append(top, sm, rs, row); return c;
   }
   function renderPlan() {
     renderCal();
