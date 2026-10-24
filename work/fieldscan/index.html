@@ -32,7 +32,9 @@
   [hidden] { display: none !important; }
   html, body { height: 100%; }
   body { margin: 0; background: var(--void); color: var(--ink); font: 15px/1.45 var(--font-display); -webkit-font-smoothing: antialiased; overflow: hidden; overscroll-behavior: none; }
-  button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  button, a, input, select, textarea, label, .reads, .ticketbar { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  @media (pointer: coarse) { input, select, textarea { font-size: 16px !important; } }
+  .sheetwrap { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
   .app { height: 100vh; height: 100dvh; max-width: 1280px; margin: 0 auto; display: grid; grid-template-rows: auto auto minmax(0, 1fr); gap: 10px;
          padding-block: max(10px, env(safe-area-inset-top, 0px)) max(10px, env(safe-area-inset-bottom, 0px));
          padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
@@ -75,7 +77,7 @@
   .null { position: relative; height: 22px; }
   .null .track { position: absolute; left: 0; right: 0; top: 10px; height: 2px; background: var(--hair); border-radius: 2px; }
   .null .zone { position: absolute; left: 50%; top: 2px; width: 44px; height: 18px; transform: translateX(-50%); border: 1px solid rgba(196, 214, 220, .25); border-radius: 6px; }
-  .null .dot { position: absolute; top: 3px; left: 50%; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: var(--ink); transition: left .08s linear; }
+  .null .dot { position: absolute; top: 3px; left: 50%; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: var(--ink); will-change: transform; }
   .null.on .dot { background: var(--ok); box-shadow: 0 0 12px var(--ok); }
 
   .reads { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--hair); border: 1px solid var(--hair); border-radius: var(--r); overflow: hidden; cursor: pointer; transition: border-color .15s; }
@@ -120,9 +122,9 @@
   .strip span, .strip button { flex: none; }
 
   .toast { position: fixed; left: 50%; top: calc(max(10px, env(safe-area-inset-top, 0px)) + 112px); transform: translate(-50%, -8px); z-index: 25; max-width: min(92vw, 520px);
-           background: rgba(17, 24, 28, .96); border: 1px solid var(--hair); border-radius: 12px; padding: 10px 14px; color: var(--ink); font: 13px var(--font-display); box-shadow: 0 12px 40px -12px #000;
-           opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; text-align: center; }
-  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+           background: #141c21; border: 1px solid rgba(196, 214, 220, .22); border-radius: 12px; padding: 10px 14px; color: var(--ink); font: 13px var(--font-display); box-shadow: 0 12px 40px -12px #000;
+           opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .16s, transform .16s, visibility 0s .16s; text-align: center; }
+  .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition: opacity .16s, transform .16s; }
 
   .edit { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; max-width: 560px; margin: 0 auto; display: grid; gap: 10px; background: var(--raise); border: 1px solid var(--hair); border-bottom: 0;
           border-radius: 18px 18px 0 0; padding: 16px max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); box-shadow: 0 -20px 60px -20px #000; }
@@ -412,7 +414,9 @@
 <script>
 (() => {
   const $ = id => document.getElementById(id);
-  const FONT = () => getComputedStyle(document.body).getPropertyValue('--font-data');
+  let fontCache = '';
+  const FONT = () => fontCache || (fontCache = getComputedStyle(document.body).getPropertyValue('--font-data').trim() || 'monospace');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { atlasKey = ''; traceDirty = marksDirty = frameDirty = true; }).catch(() => {});
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* APWA uniform color code */
@@ -462,7 +466,7 @@
   try { const sn = JSON.parse(localStorage.getItem('fs-need') || 'null'); if (Array.isArray(sn)) { const v = [...new Set(sn.filter(k => Number.isInteger(k) && k >= 0 && k < KINDS.length))].sort(); if (v.length) need = v; } } catch (e) {}
   const chip = (i, on) => { const b = document.createElement('button'), dot = document.createElement('i'); b.type = 'button'; b.dataset.k = i; b.setAttribute('aria-pressed', on);
     dot.style.background = `rgb(${KINDS[i][1]})`; b.append(dot, KINDS[i][0]); return b; };
-  function setKind(k) { kind = k; method = defaultMethod(k); if (document.getElementById('methods')) renderMethods(); $('kinds').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', +x.dataset.k === k));
+  function setKind(k) { kind = k; traceDirty = marksDirty = frameDirty = true; method = defaultMethod(k); if (document.getElementById('methods')) renderMethods(); $('kinds').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', +x.dataset.k === k));
     document.documentElement.style.setProperty('--line', `rgb(${KINDS[k][1]})`); }
   function renderKinds() {
     $('need').replaceChildren(...KINDS.map((_, i) => chip(i, need.includes(i))));
@@ -505,7 +509,7 @@
   try { const sv = JSON.parse(localStorage.getItem('fs-sitemodel') || 'null');
     if (Array.isArray(sv) && sv.length === KINDS.length && sv.every(o => o && [o.x0, o.d, o.I].every(Number.isFinite) && o.x0 >= 0 && o.x0 <= SPAN && o.d > 0 && o.d < 10 && typeof o.mat === 'string' && MATS.some(m => m.includes(o.mat)))) site = sv; } catch (e) {}
   if (!site) newSite();
-  function newLine() { line = site[kind]; method = defaultMethod(kind); renderMethods(); peak.fill(0); rx = 1 + Math.random() * 2; $('msg').textContent = ''; }
+  function newLine() { line = site[kind]; method = defaultMethod(kind); renderMethods(); peak.fill(0); traceMax = 0; traceDirty = true; rx = 1 + Math.random() * 2; $('msg').textContent = ''; }
   function fieldsAt(x, h) {          // summed horizontal (peak) and vertical (null) field at sweep position x, coil height offset h
     const m = mult(kind, method), c = (COUPLE[freq] ?? .1) * (method === 'Induction' ? 2 : 1), I0 = site[kind].I * m; let hs = 0, vs = 0;
     site.forEach((l, k) => { const I = k === kind ? I0 : I0 * c,   /* bleed from our transmitter */ dx = x - l.x0, hh = l.d + h, q = dx * dx + hh * hh; hs += I * hh / q; vs += I * dx / q; });
@@ -529,38 +533,71 @@
   let W = 0, H = 0;
   function size() { const r = C.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2), w = Math.round(r.width), h = Math.round(r.height);
     if (!w || !h || (w === W && h === H && C.width === Math.round(w * dpr))) return;
-    W = w; H = h; C.width = Math.round(w * dpr); C.height = Math.round(h * dpr); X.setTransform(dpr, 0, 0, dpr, 0, 0); if (lastR) try { draw(lastR); } catch (e) {} }
-  function draw(r) {
-    X.fillStyle = '#0c1114'; X.fillRect(0, 0, W, H);
-    const cs = W < 420 ? 9 : 11, cols = Math.floor(W / cs), rows = Math.floor((H - 26) / cs), top = 8;
-    const col = KINDS[kind][1], max = Math.max(1e-3, ...peak);
-    X.font = `600 ${Math.round(cs * .82)}px ${FONT()}`; X.textAlign = 'center'; X.textBaseline = 'middle';
-    const rc = Math.round(rx / SPAN * (cols - 1));
-    for (let c = 0; c < cols; c++) {
-      const b = Math.floor(c / cols * peak.length), v = peak[b] / max, hgt = v * rows;
-      for (let rr = 0; rr < rows; rr++) {
-        const y = top + (rows - 1 - rr) * cs, x = c * cs, fillv = Math.max(0, Math.min(1, hgt - rr));
-        if (fillv <= 0) { if (rr === 0) { X.fillStyle = 'rgba(150,175,185,.12)'; X.fillRect(x + cs / 2, y + cs / 2, 1, 1); } continue; }
-        const k = fillv * (.45 + .55 * (rr / rows));
-        X.fillStyle = `rgba(${col},${(.07 + k * .25).toFixed(2)})`; X.fillRect(x + .5, y + .5, cs - 1, cs - 1);
-        X.fillStyle = `rgba(${col},${(.35 + k * .65).toFixed(2)})`; X.fillText(RAMP[1 + Math.min(8, (k * 8.99) | 0)], x + cs / 2, y + cs / 2 + .5);
-      }
+    W = w; H = h; C.width = Math.round(w * dpr); C.height = Math.round(h * dpr); X.setTransform(dpr, 0, 0, dpr, 0, 0); layout(); if (lastR) try { draw(lastR); } catch (e) {} }
+  /* Graph rendering. Two cached layers (signal trace, marks) are composited each frame; glyphs come from a
+     pre-rendered atlas, and only the columns that change get redrawn. That keeps every frame cheap on phones. */
+  var traceDirty = true, marksDirty = true, frameDirty = true;
+  const trace = document.createElement('canvas'), TX = trace.getContext('2d'), mk = document.createElement('canvas'), MX2 = mk.getContext('2d');
+  const atlas = document.createElement('canvas'), AX = atlas.getContext('2d');
+  let gcs = 9, gcols = 0, grows = 0, gdpr = 1, atlasKey = '', traceMax = 0, dirtyCols = new Set(), lastDrawRx = -1, lastDrawOn = null;
+  const GTOP = 8, ALV = 6;
+  function layout() {
+    gdpr = Math.min(devicePixelRatio || 1, 2); gcs = W < 420 ? 9 : 11; gcols = Math.max(1, Math.floor(W / gcs)); grows = Math.max(1, Math.floor((H - 26) / gcs));
+    for (const c of [trace, mk]) { c.width = Math.round(W * gdpr); c.height = Math.round(H * gdpr); c.getContext('2d').setTransform(gdpr, 0, 0, gdpr, 0, 0); }
+    atlasKey = ''; traceDirty = marksDirty = frameDirty = true;
+  }
+  function buildAtlas() {
+    const key = `${kind}|${gcs}|${gdpr}|${FONT()}`; if (key === atlasKey) return; atlasKey = key;
+    const col = KINDS[kind][1], p = gcs * gdpr; atlas.width = p * 9; atlas.height = p * ALV;
+    AX.setTransform(gdpr, 0, 0, gdpr, 0, 0); AX.clearRect(0, 0, gcs * 9, gcs * ALV);
+    AX.font = `600 ${Math.round(gcs * .82)}px ${FONT()}`; AX.textAlign = 'center'; AX.textBaseline = 'middle';
+    for (let g = 0; g < 9; g++) for (let a = 0; a < ALV; a++) {
+      const k = (a + .5) / ALV, x = g * gcs, y = a * gcs;
+      AX.fillStyle = `rgba(${col},${(.07 + k * .25).toFixed(3)})`; AX.fillRect(x + .5, y + .5, gcs - 1, gcs - 1);
+      AX.fillStyle = `rgba(${col},${(.35 + k * .65).toFixed(3)})`; AX.fillText(RAMP[1 + g], x + gcs / 2, y + gcs / 2 + .5);
     }
-    // Marked points stay on the sweep in their utility color, through every New line.
-    X.font = `600 10px ${FONT()}`; X.textBaseline = 'top';
+  }
+  function traceCol(c) {
+    const x = c * gcs, b = Math.min(peak.length - 1, Math.floor(c / gcols * peak.length)), v = traceMax ? Math.min(1, peak[b] / traceMax) : 0, hgt = v * grows, p = gcs * gdpr;
+    TX.clearRect(x, 0, gcs, H);
+    TX.fillStyle = 'rgba(150,175,185,.12)'; TX.fillRect(x + gcs / 2, GTOP + (grows - 1) * gcs + gcs / 2, 1, 1);
+    for (let rr = 0; rr < grows; rr++) { const fv = Math.max(0, Math.min(1, hgt - rr)); if (fv <= 0) break;
+      const k = fv * (.45 + .55 * (rr / grows)), g = Math.min(8, (k * 8.99) | 0), a = Math.min(ALV - 1, (k * ALV) | 0);
+      TX.drawImage(atlas, g * p, a * p, p, p, x, GTOP + (grows - 1 - rr) * gcs, gcs, gcs); }
+  }
+  function renderTrace() {
+    buildAtlas();
+    if (traceDirty) { TX.clearRect(0, 0, W, H); for (let c = 0; c < gcols; c++) traceCol(c); traceDirty = false; dirtyCols.clear(); }
+    else if (dirtyCols.size) { for (const c of dirtyCols) if (c >= 0 && c < gcols) traceCol(c); dirtyCols.clear(); }
+  }
+  function renderMarks() {
+    if (!marksDirty) return; marksDirty = false; MX2.clearRect(0, 0, W, H);
+    MX2.font = `600 10px ${FONT()}`; MX2.textBaseline = 'top'; MX2.textAlign = 'left';
     const ends = [];
     log.filter(p => p.src === 'demo' && p.pos != null).sort((a, b) => a.pos - b.pos).forEach(p => {
-      const mx = Math.round(p.pos / SPAN * (cols - 1)) * cs + cs / 2, c = kindOf(p.k)[1];
-      const est = X.measureText(`${kindOf(p.k)[0][0]} ${ftIn(p.depth)}`).width + 10; let row = ends.findIndex(e => e < mx); if (row < 0) { row = ends.length; ends.push(0); } ends[row] = mx + est;
-      const ly = top + 2 + row * 13;
-      X.fillStyle = `rgba(${c},.85)`; X.fillRect(mx - 1, top, 2, rows * cs);
-      const label = `${kindOf(p.k)[0][0]} ${ftIn(p.depth)}`, tw = X.measureText(label).width, lx = Math.min(W - tw - 6, mx + 4);
-      X.fillStyle = 'rgba(12,17,20,.85)'; X.fillRect(lx - 2, ly - 1, tw + 4, 12);
-      X.fillStyle = `rgb(${c})`; X.textAlign = 'left'; X.fillText(label, lx, ly);
+      const mx = Math.round(p.pos / SPAN * (gcols - 1)) * gcs + gcs / 2, c = kindOf(p.k)[1], label = `${kindOf(p.k)[0][0]} ${p.depth != null ? ftIn(p.depth) : ''}`, tw = MX2.measureText(label).width;
+      let row = ends.findIndex(e => e < mx); if (row < 0) { row = ends.length; ends.push(0); } ends[row] = mx + tw + 10;
+      const ly = GTOP + 2 + row * 13, lx = Math.min(W - tw - 6, mx + 4);
+      MX2.fillStyle = `rgba(${c},.85)`; MX2.fillRect(mx - 1, GTOP, 2, grows * gcs);
+      MX2.fillStyle = 'rgba(12,17,20,.85)'; MX2.fillRect(lx - 2, ly - 1, tw + 4, 12);
+      MX2.fillStyle = `rgb(${c})`; MX2.fillText(label, lx, ly);
     });
-    X.textAlign = 'center'; X.textBaseline = 'middle';
-    const x = rc * cs + cs / 2;
-    X.fillStyle = r.centered ? 'rgba(143,240,192,.9)' : 'rgba(232,237,238,.75)'; X.fillRect(x - 1, top, 2, rows * cs);
+  }
+  // Called when the peak trace grows at bucket j: redraw only the columns that sample it, rescale rarely.
+  function peakTouched(j) {
+    const v = peak[j]; if (v > traceMax) { traceMax = v * 1.12; traceDirty = true; }
+    const c0 = Math.floor(j * gcols / peak.length); for (let c = c0 - 1; c <= c0 + 1; c++) dirtyCols.add(c);
+  }
+  function draw(r) {
+    if (!W || !H) return;
+    const changed = traceDirty || dirtyCols.size || marksDirty || frameDirty || rx !== lastDrawRx || r.centered !== lastDrawOn;
+    if (!changed) return;
+    renderTrace(); renderMarks();
+    X.fillStyle = '#0c1114'; X.fillRect(0, 0, W, H);
+    X.drawImage(trace, 0, 0, W, H); X.drawImage(mk, 0, 0, W, H);
+    const x = Math.round(rx / SPAN * (gcols - 1)) * gcs + gcs / 2;
+    X.fillStyle = r.centered ? 'rgba(143,240,192,.95)' : 'rgba(232,237,238,.75)'; X.fillRect(x - 1, GTOP, 2, grows * gcs);
+    lastDrawRx = rx; lastDrawOn = r.centered; frameDirty = false;
   }
 
   /* ---------- Sweep input ---------- */
@@ -573,8 +610,11 @@
   /* ---------- Readouts ---------- */
   const ftIn = f => { const ft = Math.floor(f), inch = Math.round((f - ft) * 12); return inch === 12 ? `${ft + 1}' 0"` : `${ft}' ${inch}"`; };
   let lastR;
+  const UIC = new Map();
+  const setT = (id, v) => { if (UIC.get(id) !== v) { UIC.set(id, v); $(id).textContent = v; } };
+  const setF = (key, fn, v) => { if (UIC.get(key) !== v) { UIC.set(key, v); fn(v); } };
   function ui(r) {
-    $('sig').textContent = r.signal.toFixed(0);
+    setT('sig', r.signal.toFixed(0));
     const call = $('call');
     const state = r.signal < 8 ? 'none' : r.centered ? 'on' : r.ratio > 0 ? 'left' : 'right';
     if (call.dataset.s !== state) {
@@ -584,14 +624,14 @@
         call.innerHTML = '<svg viewBox="0 0 60 60" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="30" cy="30" r="17"/><path d="M30 3v12M30 45v12M3 30h12M45 30h12"/><circle cx="30" cy="30" r="2.5" fill="currentColor" stroke="none"/></svg>'; }
       else { call.className = 'call'; call.textContent = state === 'left' ? '<' : '>'; call.setAttribute('aria-label', state === 'left' ? 'Move left' : 'Move right'); }
     }
-    const n = Math.max(-1, Math.min(1, -r.ratio * 1.6)); $('dot').style.left = `${50 + n * 46}%`;
-    $('null').classList.toggle('on', r.centered);
+    const n = Math.max(-1, Math.min(1, -r.ratio * 1.6)); setF('dot', v => { $('dot').style.transform = `translateX(${v}px)`; }, Math.round(n * 46 * ($('null').clientWidth || 300) / 100));
+    setF('nullon', v => $('null').classList.toggle('on', v), r.centered);
     const show = r.centered || r.locked;
-    if (show) { $('depth').textContent = ftIn(r.depth); $('depth-in').textContent = r.locked ? `${r.depth.toFixed(2)} ft · locked` : `${r.depth.toFixed(2)} ft · tap to lock`; $('cur').textContent = r.cur.toFixed(0); }
-    else { $('depth').textContent = '–'; $('depth-in').textContent = 'center to read'; $('cur').textContent = '–'; }
-    $('r-depth').classList.toggle('muted', !show); $('r-cur').classList.toggle('muted', !show);
-    const rd = $('reads'); rd.classList.toggle('locked', !!r.locked); rd.setAttribute('aria-pressed', !!r.locked);
-    $('mark').disabled = !show; $('pos').textContent = `${rx.toFixed(1)} ft`;
+    if (show) { setT('depth', ftIn(r.depth)); setT('depth-in', r.locked ? `${r.depth.toFixed(2)} ft · locked` : `${r.depth.toFixed(2)} ft · tap to lock`); setT('cur', r.cur.toFixed(0)); }
+    else { setT('depth', '–'); setT('depth-in', 'center to read'); setT('cur', '–'); }
+    setF('show', v => { $('r-depth').classList.toggle('muted', !v); $('r-cur').classList.toggle('muted', !v); $('mark').disabled = !v; }, show);
+    setF('locked', v => { const rd = $('reads'); rd.classList.toggle('locked', v); rd.setAttribute('aria-pressed', v); }, !!r.locked);
+    setT('pos', `${rx.toFixed(1)} ft`);
   }
 
   /* ---------- Log (kept in this browser only) ---------- */
@@ -803,6 +843,7 @@
     const n = sel + 1; log.splice(sel, 1); save(); $('msg').textContent = `Mark ${n} cleared`; closeEdit(); });
 
   function renderLog() {
+    marksDirty = true;
     $('count').textContent = log.length; renderResp(); if (typeof updateBar === 'function' && $('tb-count')) try { updateBar(); } catch (e) {}
     const off = Math.max(0, log.length - 12);
     $('strip').replaceChildren(...log.slice(off).map((p, j) => { const s = el('button'), dot = el('i'), i = off + j; s.type = 'button'; s.setAttribute('aria-pressed', i === sel);
@@ -1252,7 +1293,7 @@
     if (held) { r.depth = held.d; r.cur = held.c; r.locked = true; }
     lastR = r;
     const b = Math.max(0, Math.min(peak.length - 1, Math.round(rx / SPAN * (peak.length - 1))));
-    for (let k = -1; k <= 1; k++) { const j = b + k; if (j >= 0 && j < peak.length) peak[j] = Math.max(peak[j], fieldsAt(rx + k * SPAN / peak.length, 0).h); }
+    for (let k = -1; k <= 1; k++) { const j = b + k; if (j >= 0 && j < peak.length) { const v = fieldsAt(rx + k * SPAN / peak.length, 0).h; if (v > peak[j]) { peak[j] = v; peakTouched(j); } } }
     if (!$('p-locate').hidden) { draw(r); ui(r); }
     } catch (e) { /* keep running; a bad frame must never freeze the scope */ }
   })(last);
