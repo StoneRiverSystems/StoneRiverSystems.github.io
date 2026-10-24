@@ -505,7 +505,9 @@
   /* ---------- Graph: ASCII transverse profile ---------- */
   const C = $('g'), X = C.getContext('2d'), RAMP = ' .:-=+*%#@';
   let W = 0, H = 0;
-  function size() { const r = C.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2); W = r.width; H = r.height; C.width = W * dpr; C.height = H * dpr; X.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  function size() { const r = C.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2), w = Math.round(r.width), h = Math.round(r.height);
+    if (!w || !h || (w === W && h === H && C.width === Math.round(w * dpr))) return;
+    W = w; H = h; C.width = Math.round(w * dpr); C.height = Math.round(h * dpr); X.setTransform(dpr, 0, 0, dpr, 0, 0); if (lastR) try { draw(lastR); } catch (e) {} }
   function draw(r) {
     X.fillStyle = '#0c1114'; X.fillRect(0, 0, W, H);
     const cs = W < 420 ? 9 : 11, cols = Math.floor(W / cs), rows = Math.floor((H - 26) / cs), top = 8;
@@ -1140,7 +1142,7 @@
   if ('ResizeObserver' in window) new ResizeObserver(() => size()).observe($('graph'));
 
   newLine(); size(); renderLog(); updateBar(); addEventListener('resize', size);
-  let hint = !reduce, last = performance.now(), sm = null, held = null;
+  let hint = false, last = performance.now(), sm = null, held = null;
   // Lock: tap the readings, or press a trigger. Bluetooth shutter remotes and keypads send Enter, Space or volume-up.
   function toggleLock() {
     if (held) { held = null; $('msg').textContent = 'Reading released'; return; }
@@ -1155,7 +1157,9 @@
   });
   C.addEventListener('pointerdown', () => hint = false, { once: true });
   (function loop(now) {
-    const dt = Math.min(.05, (now - last) / 1000); last = now; t += dt;
+    requestAnimationFrame(loop);
+    try {
+    const dt = Math.min(.05, Math.max(0, (now - last) / 1000)); last = now; t += dt;
     if (hint) rx = Math.min(SPAN, rx + dt * 1.2), hint = rx < line.x0 - 2.5;   // opening sweep stops short of the line
     const r = read();
     // Smooth like a real receiver: average about a second of readings, then lock once held steady on the line.
@@ -1170,7 +1174,7 @@
     const b = Math.max(0, Math.min(peak.length - 1, Math.round(rx / SPAN * (peak.length - 1))));
     for (let k = -1; k <= 1; k++) { const j = b + k; if (j >= 0 && j < peak.length) peak[j] = Math.max(peak[j], fieldsAt(rx + k * SPAN / peak.length, 0).h); }
     if (!$('p-locate').hidden) { draw(r); ui(r); }
-    requestAnimationFrame(loop);
+    } catch (e) { /* keep running; a bad frame must never freeze the scope */ }
   })(last);
 })();
 </script>
