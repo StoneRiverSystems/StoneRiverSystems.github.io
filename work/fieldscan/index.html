@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#06090b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="description" content="Fieldscan by StoneRiver: a modern utility locate screen with marks, per-utility responses, locate reports and a daily field log. Demo uses a simulated yard.">
+<meta name="description" content="Fieldscan by StoneRiver: a modern utility locate screen with marks, per-utility responses, a monthly ticket list, locate reports and a daily field log. Demo uses a simulated yard.">
 <title>StoneRiver Fieldscan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -133,6 +133,29 @@
   .sheet.dark .msg { color: var(--ok); }
   .sheet h3.sub { font: 600 13px var(--font-display); margin: 4px 0 0; color: var(--dim); }
 
+  .plan { max-width: 720px; }
+  .cal-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .cal-nav b { font: 600 18px var(--font-display); letter-spacing: -.01em; }
+  .cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .cal .dow { font: 600 10.5px var(--font-data); color: var(--dim); text-align: center; padding-bottom: 2px; }
+  .cal button { position: relative; aspect-ratio: 1 / .9; min-height: 40px; border: 1px solid var(--hair); border-radius: 10px; background: var(--void); color: var(--ink); font: 500 13px var(--font-data); cursor: pointer; padding: 4px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; }
+  .cal button.out { opacity: .3; } .cal button.today { border-color: var(--ink); }
+  .cal button[aria-selected="true"] { background: var(--ink); color: var(--void); }
+  .cal button.red { box-shadow: inset 0 -3px 0 #ff483e; }
+  .cal .dots { display: flex; gap: 2px; flex-wrap: wrap; } .cal .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--dim); }
+  .cal .dots i.r { background: #ff483e; } .cal .dots i.d { background: var(--ok); }
+  .pform { display: grid; gap: 10px; padding: 12px; border: 1px solid var(--hair); border-radius: 12px; }
+  .chk { display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 14px; } .chk input { width: 18px; height: 18px; accent-color: #ff483e; }
+  .plist { display: grid; gap: 8px; }
+  .pcard { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--hair); border-left: 4px solid var(--dim); border-radius: 12px; background: var(--void); }
+  .pcard.red { border-left-color: #ff483e; } .pcard.done { opacity: .6; border-left-color: var(--ok); }
+  .pcard .top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .pcard b { font: 600 15px var(--font-display); } .pcard .tag { font: 600 11px var(--font-data); color: #ff8a80; white-space: nowrap; } .pcard.done .tag { color: var(--ok); }
+  .pcard small { color: var(--dim); font: 12px var(--font-data); display: block; overflow-wrap: anywhere; }
+  .calls { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; } .calls li { font-size: 13px; color: var(--ink); overflow-wrap: anywhere; } .calls time { color: var(--dim); font: 11.5px var(--font-data); margin-right: 6px; }
+  .callrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; } .callrow input { padding: 8px; font-size: 13px; }
+  .pcard .row .btn { min-height: 36px; padding: 6px 10px; font-size: 12.5px; }
+
   /* Wide: scope left, controls right */
   @media (min-width: 900px) and (min-height: 560px) {
     .stage { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; }
@@ -228,7 +251,7 @@
 <div class="app">
   <header class="top">
     <div class="brand"><i aria-hidden="true"></i>FIELDSCAN</div>
-    <div class="hbtns"><button type="button" class="btn small" id="recap-top">Field Log</button><button type="button" class="btn small" id="newticket">New ticket</button></div>
+    <div class="hbtns"><button type="button" class="btn small" id="plan-top">Tickets</button><button type="button" class="btn small" id="newticket">New ticket</button></div>
   </header>
 
   <button type="button" class="ticketbar" id="ticket-open" aria-haspopup="dialog">
@@ -286,6 +309,31 @@
     <button type="button" class="btn small" id="ed-save">Save</button>
     <button type="button" class="btn small danger" id="ed-clear">Clear mark</button>
     <button type="button" class="btn small" id="ed-cancel">Cancel</button>
+  </div>
+</div>
+
+<div class="sheetwrap" id="plansheet" hidden role="dialog" aria-modal="true" aria-labelledby="pl-title">
+  <div class="sheet dark plan">
+    <div class="rp-head"><div><small>Fieldscan</small><h2 id="pl-title">Tickets</h2></div><button type="button" class="btn small" id="plan-close">Close</button></div>
+    <div class="cal-nav"><button type="button" class="btn small" id="cal-prev" aria-label="Previous month">‹</button><b id="cal-month"></b><button type="button" class="btn small" id="cal-next" aria-label="Next month">›</button></div>
+    <p class="fine" id="cal-sum"></p>
+    <div class="cal" id="cal" role="grid" aria-label="Month calendar"></div>
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <h3 class="sub" id="day-title" style="margin:0"></h3>
+      <div class="row" style="gap:6px"><button type="button" class="btn small" id="view-month" aria-pressed="false">Whole month</button><button type="button" class="btn small" id="plan-add">Add ticket</button></div>
+    </div>
+    <form class="pform" id="pform" hidden>
+      <div class="two">
+        <label>Due date<input id="pf-due" type="date" required></label>
+        <label>Ticket number<input id="pf-ticket" inputmode="numeric" placeholder="811 ticket #" required></label>
+        <label>Site<input id="pf-site" placeholder="Address"></label>
+        <label>Locate for<input id="pf-for" placeholder="Excavator / company"></label>
+      </div>
+      <label class="chk"><input id="pf-red" type="checkbox"> Red ticket (priority)</label>
+      <div class="kind" id="pf-need" role="group" aria-label="Utilities on this ticket"></div>
+      <div class="row"><button type="submit" class="btn small">Save ticket</button><button type="button" class="btn small" id="pf-cancel">Cancel</button></div>
+    </form>
+    <div class="plist" id="plist"></div>
   </div>
 </div>
 
@@ -379,7 +427,12 @@
   const defaultMethod = k => k === 4 ? 'Sonde' : 'Direct connect';   // on plastic with tracer, direct connect means clipping onto the tracer wire
   function renderMethods() {
     $('methods').replaceChildren(...METHODS.map(m => { const b = document.createElement('button'); b.type = 'button'; b.textContent = m; b.setAttribute('aria-pressed', m === method);
-      b.addEventListener('click', () => { method = m; renderMethods(); }); return b; }));
+      b.addEventListener('click', () => {
+        if (m === 'Sonde' && kind !== 4) {   // a sonde rides down the sewer, so locating one means locating sewer
+          if (!need.includes(4)) { $('msg').textContent = 'Add Sewer to the ticket to locate a sonde.'; return; }
+          setKind(4); $('msg').textContent = 'Sonde is in the sewer. Switched to Sewer.';
+        }
+        method = m; renderMethods(); }); return b; }));
     $('mapnote').textContent = site ? `Map shows ${KINDS[kind][0].toLowerCase()}: ${site[kind].mat}.` : '';
   }
   // Utilities on the ticket decide which ones the tech can toggle between while locating.
@@ -443,7 +496,7 @@
     const ratio = vz / hb;                       // equals dx/d: sign tells side, size tells how far off
     // Peak and null must agree: null near zero AND the peak at a local maximum (rejects the false null between two lines).
     let pk = 0; for (let i = 0; i < peak.length; i++) if (peak[i] > pk) pk = peak[i];
-    const centered = Math.abs(ratio) < .1 && b0.h >= fieldsAt(rx - .4, 0).h * .995 && b0.h >= fieldsAt(rx + .4, 0).h * .995 && b0.h >= pk * .6;
+    const centered = Math.abs(ratio) < .12 && b0.h >= fieldsAt(rx - .4, 0).h * .995 && b0.h >= fieldsAt(rx + .4, 0).h * .995 && b0.h >= pk * .6;
     let depth = null, cur = null;
     if (centered) { depth = SEP * ht / (hb - ht); cur = hb * depth; }  // standard two-coil depth, then current from field and depth
     return { signal, ratio, centered, depth, cur };
@@ -949,7 +1002,7 @@
     renderRecap(); recapFocus = document.activeElement; $('recap').hidden = false; $('recap-close').focus();
   }
   function closeRecap() { $('recap').hidden = true; if (recapFocus) recapFocus.focus(); }
-  $('recap-open').addEventListener('click', openRecap); $('recap-top').addEventListener('click', openRecap); $('recap-close').addEventListener('click', closeRecap);
+  $('recap-open').addEventListener('click', openRecap); $('recap-close').addEventListener('click', closeRecap);
   $('rc-day').addEventListener('change', renderRecap);
   $('recap').addEventListener('click', e => { if (e.target === $('recap')) closeRecap(); });
   addEventListener('keydown', e => { if (e.key === 'Escape' && !$('recap').hidden) closeRecap(); });
@@ -966,7 +1019,7 @@
     const btn = $('newticket'), busy = log.length || $('ticket').value || $('site').value;
     if (busy && !armed) { armed = true; btn.textContent = 'Close ticket?';
       setTimeout(() => { armed = false; btn.textContent = 'New ticket'; }, 3500); return; }
-    const done = currentTicket(); if (done) { hist.push(done); saveHist(); }
+    const done = currentTicket(); if (done) { hist.push(done); saveHist(); const pt = plan.find(t => t.ticket && t.ticket === done.ticket && !t.done); if (pt) { pt.done = true; savePlan(); } }
     tid = newId(); try { localStorage.setItem('fs-tid', tid); } catch (e) {} $('tnote').value = '';
     log = []; held = null; sel = -1; $('edit').hidden = true; $('ticket').value = ''; $('site').value = ''; $('forwho').value = ''; need = [0, 1, 2, 3, 4, 5]; resp = {}; saveResp(); renderKinds(); newSite(); save(); renderLog(); newLine(); gate();
     armed = false; btn.textContent = 'New ticket'; $('msg').textContent = done ? 'Ticket closed and added to the Daily Field Log. New ticket started.' : 'New ticket started'; openTicket();
@@ -976,6 +1029,89 @@
 
 
   /* ---------- Loop ---------- */
+  /* ---------- Ticket list: monthly plan with red (priority) tickets and call logs ---------- */
+  let plan = [], calY, calM, selDay = dayKey(Date.now()), monthView = false;
+  const cleanPlan = t => { if (!t || typeof t !== 'object' || typeof t.due !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(t.due)) return null;
+    return { id: /^p[a-z0-9]{4,22}$/.test(t.id) ? t.id : 'p' + Math.random().toString(36).slice(2, 10), due: t.due, ticket: str(t.ticket, 40), site: str(t.site, 120), forwho: str(t.forwho, 80),
+      red: t.red === true, done: t.done === true, need: Array.isArray(t.need) ? t.need.filter(k => Number.isInteger(k) && k >= 0 && k < KINDS.length) : [],
+      calls: Array.isArray(t.calls) ? t.calls.filter(c => c && finite(c.at) && typeof c.text === 'string').map(c => ({ at: c.at, text: str(c.text, 300) })).slice(-50) : [] }; };
+  try { const pl = JSON.parse(localStorage.getItem('fs-plan') || '[]'); if (Array.isArray(pl)) plan = pl.map(cleanPlan).filter(Boolean).slice(0, 2000); } catch (e) { plan = []; }
+  const savePlan = () => { try { localStorage.setItem('fs-plan', JSON.stringify(plan)); } catch (e) { $('msg').textContent = 'Phone storage is full. Some ticket changes may not be saved.'; } };
+  { const d = new Date(); calY = d.getFullYear(); calM = d.getMonth(); }
+  const sortT = (a, b) => (a.done - b.done) || (b.red - a.red) || a.due.localeCompare(b.due) || a.ticket.localeCompare(b.ticket);
+  function renderCal() {
+    const first = new Date(calY, calM, 1), startDow = first.getDay(), days = new Date(calY, calM + 1, 0).getDate(), today = dayKey(Date.now());
+    $('cal-month').textContent = first.toLocaleDateString([], { month: 'long', year: 'numeric' });
+    const mk = `${calY}-${String(calM + 1).padStart(2, '0')}`, inMonth = plan.filter(t => t.due.startsWith(mk));
+    $('cal-sum').textContent = `${inMonth.length} tickets · ${inMonth.filter(t => t.red && !t.done).length} red open · ${inMonth.filter(t => t.done).length} done`;
+    const cells = ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => { const e = el('div', 'dow'); e.textContent = d; return e; });
+    for (let i = 0; i < 42; i++) {
+      const d = new Date(calY, calM, 1 - startDow + i); if (i >= 35 && d.getMonth() !== calM) break;
+      const k = dayKey(d.getTime()), list = plan.filter(t => t.due === k), b = el('button'), num = el('span'), dots = el('span', 'dots');
+      b.type = 'button'; b.setAttribute('role', 'gridcell'); b.setAttribute('aria-selected', k === selDay);
+      b.setAttribute('aria-label', `${d.toLocaleDateString([], { month: 'short', day: 'numeric' })}, ${list.length} tickets${list.some(t => t.red && !t.done) ? ', red ticket' : ''}`);
+      if (d.getMonth() !== calM) b.classList.add('out'); if (k === today) b.classList.add('today'); if (list.some(t => t.red && !t.done)) b.classList.add('red');
+      num.textContent = d.getDate();
+      list.slice(0, 6).forEach(t => { const i2 = el('i'); if (t.done) i2.className = 'd'; else if (t.red) i2.className = 'r'; dots.append(i2); });
+      b.append(num, dots); b.addEventListener('click', () => { selDay = k; monthView = false; renderPlan(); }); cells.push(b);
+    }
+    $('cal').replaceChildren(...cells);
+  }
+  function card(t) {
+    const c = el('div', 'pcard' + (t.red ? ' red' : '') + (t.done ? ' done' : '')), top = el('div', 'top'), b = el('b'), tag = el('span', 'tag'), sm = el('small');
+    b.textContent = `Ticket ${t.ticket || '—'}`; tag.textContent = t.done ? 'Done' : t.red ? 'Red ticket' : '';
+    sm.textContent = [monthView ? new Date(t.due + 'T12:00:00').toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }) : '', t.site, t.forwho && `for ${t.forwho}`, t.need.map(k => KINDS[k][0]).join(', ')].filter(Boolean).join(' · ');
+    top.append(b, tag);
+    const calls = el('ul', 'calls');
+    t.calls.forEach(cl => { const li = el('li'), tm = el('time'); tm.textContent = new Date(cl.at).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }); li.append(tm, cl.text); calls.append(li); });
+    const cr = el('div', 'callrow'), inp = el('input'), add = el('button', 'btn small'); inp.placeholder = 'Call log note, e.g. left voicemail for excavator'; inp.maxLength = 300; inp.setAttribute('aria-label', 'Call log note');
+    add.type = 'button'; add.textContent = 'Log call';
+    const logIt = () => { const v = inp.value.trim(); if (!v) return; t.calls.push({ at: Date.now(), text: v.slice(0, 300) }); savePlan(); renderPlan(); };
+    add.addEventListener('click', logIt); inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); logIt(); } });
+    cr.append(inp, add);
+    const row = el('div', 'row'), go = el('button', 'btn small'), dn = el('button', 'btn small'), del = el('button', 'btn small danger');
+    go.type = dn.type = del.type = 'button'; go.textContent = 'Start locate'; dn.textContent = t.done ? 'Reopen' : 'Mark done'; del.textContent = 'Delete';
+    go.addEventListener('click', () => startLocate(t));
+    dn.addEventListener('click', () => { t.done = !t.done; savePlan(); renderPlan(); });
+    del.addEventListener('click', () => { if (del.dataset.armed) { plan = plan.filter(x => x !== t); savePlan(); renderPlan(); } else { del.dataset.armed = '1'; del.textContent = 'Tap again'; } });
+    row.append(go, dn, del);
+    c.append(top, sm, calls, cr, row); return c;
+  }
+  function renderPlan() {
+    renderCal();
+    const mk = `${calY}-${String(calM + 1).padStart(2, '0')}`;
+    const list = (monthView ? plan.filter(t => t.due.startsWith(mk)) : plan.filter(t => t.due === selDay)).sort(sortT);
+    $('day-title').textContent = monthView ? 'Whole month' : new Date(selDay + 'T12:00:00').toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' });
+    $('view-month').setAttribute('aria-pressed', monthView);
+    if (!list.length) { const e = el('div', 'empty'); e.textContent = monthView ? 'No tickets this month yet.' : 'No tickets on this day. Tap Add ticket to plan one.'; $('plist').replaceChildren(e); }
+    else $('plist').replaceChildren(...list.map(card));
+  }
+  function startLocate(t) {
+    const cur = $('ticket').value.trim();
+    if ((log.length || cur) && cur !== t.ticket) { $('msg').textContent = 'Close the current ticket first with New ticket.'; closePlan(); return; }
+    $('ticket').value = t.ticket; $('site').value = t.site; $('forwho').value = t.forwho;
+    if (t.need.length) { need = [...t.need].sort(); renderKinds(); }
+    save(); gate(); closePlan(); $('msg').textContent = `Ticket ${t.ticket} loaded. Sweep when ready.`;
+  }
+  let planFocus = null;
+  function openPlan() { planFocus = document.activeElement; $('pform').hidden = true; renderPlan(); $('plansheet').hidden = false; $('plan-close').focus(); }
+  function closePlan() { $('plansheet').hidden = true; if (planFocus && planFocus.focus) planFocus.focus(); }
+  $('plan-top').addEventListener('click', openPlan); $('plan-close').addEventListener('click', closePlan);
+  $('plansheet').addEventListener('click', e => { if (e.target === $('plansheet')) closePlan(); });
+  $('cal-prev').addEventListener('click', () => { calM--; if (calM < 0) { calM = 11; calY--; } renderPlan(); });
+  $('cal-next').addEventListener('click', () => { calM++; if (calM > 11) { calM = 0; calY++; } renderPlan(); });
+  $('view-month').addEventListener('click', () => { monthView = !monthView; renderPlan(); });
+  let pfNeed = [];
+  function renderPfNeed() { $('pf-need').replaceChildren(...KINDS.map((k, i) => { const b = chip(i, pfNeed.includes(i)); b.addEventListener('click', () => { pfNeed = pfNeed.includes(i) ? pfNeed.filter(x => x !== i) : [...pfNeed, i].sort(); renderPfNeed(); }); return b; })); }
+  $('plan-add').addEventListener('click', () => { $('pform').reset(); $('pf-due').value = selDay; pfNeed = []; renderPfNeed(); $('pform').hidden = false; $('pf-ticket').focus(); });
+  $('pf-cancel').addEventListener('click', () => { $('pform').hidden = true; });
+  $('pform').addEventListener('submit', e => { e.preventDefault();
+    const t = cleanPlan({ due: $('pf-due').value, ticket: $('pf-ticket').value, site: $('pf-site').value, forwho: $('pf-for').value, red: $('pf-red').checked, need: pfNeed, calls: [] });
+    if (!t || !t.ticket) { $('msg').textContent = 'A ticket needs a due date and a ticket number.'; return; }
+    if (plan.length >= 2000) { $('msg').textContent = 'Ticket list is full.'; return; }
+    plan.push(t); savePlan(); selDay = t.due; const d = new Date(t.due + 'T12:00:00'); calY = d.getFullYear(); calM = d.getMonth(); $('pform').hidden = true; renderPlan(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !$('plansheet').hidden) closePlan(); });
+
   /* ---------- App shell: ticket bar, ticket sheet, toast, print ---------- */
   function updateBar() {
     const tk = $('ticket').value.trim(), st = $('site').value.trim();
