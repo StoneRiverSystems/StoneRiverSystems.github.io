@@ -40,9 +40,11 @@
          padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   .app > * { min-width: 0; }
   header.top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  @media (max-width: 400px) { .brand span { display: none; } }
   .brand { font: 600 11.5px var(--font-data); letter-spacing: .08em; display: flex; gap: 9px; align-items: center; white-space: nowrap; }
   .brand i { width: 8px; height: 8px; border: 1px solid var(--ink); transform: rotate(45deg); }
   .hbtns { display: flex; gap: 6px; }
+  #jsa-top.need { border-color: #ffb03a; color: #ffcf7a; }
 
   .ticketbar { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; color: var(--ink); background: var(--card); border: 1px solid var(--hair); border-radius: var(--r); padding: 9px 12px; cursor: pointer; font: inherit; min-height: 50px; }
   .ticketbar:hover { border-color: rgba(196, 214, 220, .28); }
@@ -159,6 +161,16 @@
   .callrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; } .callrow input { padding: 8px; font-size: 13px; }
   .pcard .row .btn { min-height: 36px; padding: 6px 10px; font-size: 12.5px; }
 
+  .jsa-h { font: 600 15px var(--font-display); margin: 6px 0 0; }
+  .jsa-list { display: grid; gap: 6px; }
+  .hz { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; align-items: start; padding: 10px; border: 1px solid var(--rule); border-radius: 10px; }
+  .hz.on { border-color: var(--pink); }
+  .hz input[type=checkbox], .jsa-ppe input { width: 20px; height: 20px; margin: 1px 0 0; accent-color: #1a1d20; }
+  .hz b { font-weight: 600; } .hz input[type=text] { grid-column: 2; padding: 7px 9px; font: 13px var(--font-display); color: var(--pink); background: var(--paper); border-color: var(--rule); }
+  .hz:not(.on) input[type=text] { display: none; }
+  .jsa-ppe { display: flex; flex-wrap: wrap; gap: 8px 14px; } .jsa-ppe label { display: flex; align-items: center; gap: 6px; color: var(--pink); font-size: 14px; }
+  #jsasheet input, #jsasheet textarea { color: var(--pink); background: var(--paper); border-color: var(--rule); }
+
   /* Wide: scope left, controls right */
   @media (min-width: 900px) and (min-height: 560px) {
     .stage { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; }
@@ -257,8 +269,8 @@
 
 <div class="app">
   <header class="top">
-    <div class="brand"><i aria-hidden="true"></i>FIELDSCAN</div>
-    <div class="hbtns"><button type="button" class="btn small" id="plan-top">Tickets</button><button type="button" class="btn small" id="newticket">New ticket</button></div>
+    <div class="brand"><i aria-hidden="true"></i><span>FIELDSCAN</span></div>
+    <div class="hbtns"><button type="button" class="btn small" id="jsa-top">JSA</button><button type="button" class="btn small" id="plan-top">Tickets</button><button type="button" class="btn small" id="newticket">New ticket</button></div>
   </header>
 
   <button type="button" class="ticketbar" id="ticket-open" aria-haspopup="dialog">
@@ -316,6 +328,28 @@
     <button type="button" class="btn small" id="ed-save">Save</button>
     <button type="button" class="btn small danger" id="ed-clear">Clear mark</button>
     <button type="button" class="btn small" id="ed-cancel">Cancel</button>
+  </div>
+</div>
+
+<div class="sheetwrap" id="jsasheet" hidden role="dialog" aria-modal="true" aria-labelledby="js-title">
+  <div class="sheet">
+    <div class="rp-head"><div><small>StoneRiver Fieldscan</small><h2 id="js-title">Job Safety Analysis</h2></div><button type="button" class="btn small" id="jsa-close">Close</button></div>
+    <dl class="rp-meta" id="js-meta"></dl>
+    <h3 class="jsa-h">Hazards on this site</h3>
+    <p class="rp-note">Check what's present. The control is filled in; edit it to fit the site.</p>
+    <div class="jsa-list" id="js-hz"></div>
+    <h3 class="jsa-h">PPE</h3>
+    <div class="jsa-ppe" id="js-ppe"></div>
+    <div class="two">
+      <label style="color:var(--sub)">Nearest hospital<input id="js-hosp" maxlength="120" placeholder="Name and address"></label>
+      <label style="color:var(--sub)">Muster point<input id="js-muster" maxlength="120" placeholder="e.g. truck at curb"></label>
+    </div>
+    <label style="color:var(--sub)">Other hazards or notes<textarea id="js-notes" maxlength="600" rows="2" placeholder="Anything else the crew should know"></textarea></label>
+    <p class="rp-note">Anyone can stop work at any time. Smell gas: leave the area, no switches or phones nearby, then call 911 and the gas company.</p>
+    <div class="signrow"><input id="js-name" placeholder="Technician: type your name to sign" maxlength="80" aria-label="Technician name"><button type="button" class="btn small" id="js-sign">Sign</button></div>
+    <div class="rp-sign"><span id="js-line">Technician signature</span><span id="js-date">Date</span></div>
+    <div class="row"><button type="button" class="btn small" id="js-copy">Copy JSA</button><button type="button" class="btn small" id="js-print" hidden>Print</button></div>
+    <p class="msg" id="js-msg"></p>
   </div>
 </div>
 
@@ -942,7 +976,7 @@
     const now = new Date(), fmtD = d => d.toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' }), fmtT = d => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     const first = log.length ? new Date(Math.min(...log.map(p => p.at))) : now;
     return { now, meta: [['811 ticket', $('ticket').value || '—'], ['Site', $('site').value || '—'], ['Locate for', $('forwho').value || '—'], ['Located by', $('bywho').value || '—'],
-      ['Date', fmtD(now)], ['Time', log.length ? `${fmtT(first)} to ${fmtT(now)}` : fmtT(now)], ['Utilities on ticket', need.map(k => KINDS[k][0]).join(', ')], ['Points marked', String(log.length)]],
+      ['Date', fmtD(now)], ['Time', log.length ? `${fmtT(first)} to ${fmtT(now)}` : fmtT(now)], ['Utilities on ticket', need.map(k => KINDS[k][0]).join(', ')], ['Points marked', String(log.length)], ['JSA', jsaStatus(tid)]],
       responses: need.map(k => [KINDS[k][0], respText(k, resp, log), respOf(k, resp, log)]), fmtT };
   }
   /* Typed signatures: a ticket's locator signature, and a day's technician and supervisor sign-off. */
@@ -1073,6 +1107,7 @@
   const saveHist = () => { const cut = Date.now() - KEEP_DAYS * 864e5; hist = hist.filter(t => t.end >= cut).slice(-MAX_HIST);
     const keep = new Set([tid, ...hist.map(t => t.id)]); let pruned = false; for (const k of Object.keys(photos)) if (!keep.has(k)) { delete photos[k]; pruned = true; } if (pruned) savePhotos();
     let np = false; for (const k of Object.keys(notes)) if (!keep.has(k)) { delete notes[k]; np = true; } if (np) saveNotes();
+    let jp = false; for (const k of Object.keys(jsa)) if (!keep.has(k)) { delete jsa[k]; jp = true; } if (jp) saveJsa();
     try { localStorage.setItem('fs-history', JSON.stringify(hist)); } catch (e) {} };
   function currentTicket() {
     if (!log.length && !$('ticket').value.trim()) return null;
@@ -1104,7 +1139,7 @@
       const li = el('li'), box = el('div'), b = el('b'), a = el('small'), c = el('small'), st = el('small');
       b.textContent = `${hm(t.start)}${t.end > t.start ? '–' + hm(t.end) : ''} · ${t.ticket ? 'Ticket ' + t.ticket : 'No ticket #'}${t.open ? ' (open)' : ''}`;
       a.textContent = [t.site, t.forwho && `for ${t.forwho}`, t.bywho && `by ${t.bywho}`].filter(Boolean).join(' · ') || 'No site entered';
-      c.textContent = markSum(t); st.textContent = `${status(t)} · ${respLine(t)}${t.end > t.start ? ' · ' + dur((t.end - t.start) / 6e4) + ' on ticket' : ''}`;
+      c.textContent = markSum(t); st.textContent = `${jsaStatus(t.id)} · ${status(t)} · ${respLine(t)}${t.end > t.start ? ' · ' + dur((t.end - t.start) / 6e4) + ' on ticket' : ''}`;
       const ro = el('div', 'phbtns');
       if (!t.open) { if (canReopen(t)) { const rb = el('button', 'btn'); rb.type = 'button'; rb.textContent = `Reopen (${lockLeft(t)} left)`; rb.addEventListener('click', () => { if (reopenTicket(t)) closeRecap(); }); ro.append(rb); }
         else { const lk = el('small'); lk.textContent = 'Locked for the record'; ro.append(lk); } }
@@ -1241,6 +1276,62 @@
   }
   let planFocus = null;
   function openPlan() { planFocus = document.activeElement; $('pform').hidden = true; renderPlan(); $('plansheet').hidden = false; $('plan-close').focus(); }
+  /* ---------- JSA (job safety analysis), one per ticket ---------- */
+  const HAZ = [
+    ['traffic', 'Traffic', 'Park off the road, beacon on, Class 2+ vest, cones behind the truck, face traffic.'],
+    ['overhead', 'Overhead power lines', 'Look up first. Stay 10 ft+ away; never raise tools or flags near lines.'],
+    ['energized', 'Energized equipment', 'Never direct-connect to live electric. Use induction or clamp; stay clear of open pedestals.'],
+    ['gas', 'Gas odor', 'Leave the area upwind, no switches or phones nearby, call 911 and the gas company.'],
+    ['animals', 'Dogs and animals', 'Check the yard before entering; leave if a dog is loose and call the customer.'],
+    ['bugs', 'Fire ants, snakes, insects', 'Scan the ground, boots and gloves on, watch around meters and boxes.'],
+    ['heat', 'Heat stress', 'Water every 15 to 20 minutes, shade breaks, watch for cramps and dizziness.'],
+    ['weather', 'Lightning and storms', 'Thunder heard: stop and wait in the truck 30 minutes after the last strike.'],
+    ['ground', 'Slips, trips, uneven ground', 'Walk the route first; watch holes, valve boxes, wet grass and curbs.'],
+    ['vaults', 'Vaults and confined spaces', 'Do not enter. Locate from the surface; keep lids on.'],
+    ['sharps', 'Sharps and debris', 'Gloves on; do not reach into grass or boxes without looking.'],
+    ['lifting', 'Lifting lids and equipment', 'Use a lid hook, lift with legs, get help for heavy lids.']];
+  const PPE = ['Hard hat', 'Class 2/3 vest', 'Safety glasses', 'Gloves', 'Safety-toe boots', 'Hearing protection', 'Sunscreen and water'];
+  let jsa = {};
+  const cleanJsa = j => { if (!j || typeof j !== 'object') return null; const hz = {};
+    for (const [k, , d] of HAZ) { const h = j.hz && j.hz[k]; hz[k] = { on: !!(h && h.on), ctl: h && typeof h.ctl === 'string' ? str(h.ctl, 200) : d }; }
+    return { hz, ppe: Array.isArray(j.ppe) ? j.ppe.filter(x => PPE.includes(x)) : [], hosp: str(j.hosp, 120), muster: str(j.muster, 120), notes: str(j.notes, 600), sig: cleanSig(j.sig) }; };
+  try { const a = JSON.parse(localStorage.getItem('fs-jsa') || '{}'); for (const [k, v] of Object.entries(a || {})) { const c = cleanJsa(v); if (c && /^t[a-z0-9]{4,22}$/.test(k)) jsa[k] = c; } } catch (e) {}
+  const saveJsa = () => { try { localStorage.setItem('fs-jsa', JSON.stringify(jsa)); } catch (e) {} };
+  const curJsa = () => jsa[tid] || (jsa[tid] = cleanJsa({ hz: {}, ppe: ['Class 2/3 vest', 'Gloves', 'Safety-toe boots', 'Safety glasses'] }));
+  function jsaSigned() { try { return !!(jsa[tid] && jsa[tid].sig); } catch (e) { return false; } }
+  function jsaStatus(id) { const j = jsa[id]; return j && j.sig ? `JSA signed ${hm(j.sig.at)}` : 'JSA not signed'; }
+  function renderJsa() {
+    const j = curJsa();
+    const meta = [['Date', new Date().toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' })], ['811 ticket', $('ticket').value || '—'], ['Site', $('site').value || '—'], ['Technician', $('bywho').value || '—']];
+    $('js-meta').replaceChildren(...meta.map(([k, v]) => { const w = el('div'), dt = el('dt'), dd = el('dd'); dt.textContent = k; dd.textContent = v; w.append(dt, dd); return w; }));
+    $('js-hz').replaceChildren(...HAZ.map(([k, name]) => { const h = j.hz[k], row = el('div', 'hz' + (h.on ? ' on' : '')), cb = el('input'), b = el('b'), ctl = el('input');
+      cb.type = 'checkbox'; cb.checked = h.on; cb.id = `hz-${k}`; cb.setAttribute('aria-label', name); b.textContent = name; ctl.type = 'text'; ctl.value = h.ctl; ctl.maxLength = 200; ctl.setAttribute('aria-label', `${name} control`);
+      cb.addEventListener('change', () => { h.on = cb.checked; row.classList.toggle('on', h.on); unsign(); saveJsa(); });
+      ctl.addEventListener('input', () => { h.ctl = ctl.value.slice(0, 200); unsign(); saveJsa(); });
+      row.append(cb, b, ctl); return row; }));
+    $('js-ppe').replaceChildren(...PPE.map(x => { const lab = el('label'), cb = el('input'); cb.type = 'checkbox'; cb.checked = j.ppe.includes(x);
+      cb.addEventListener('change', () => { j.ppe = cb.checked ? [...new Set([...j.ppe, x])] : j.ppe.filter(y => y !== x); unsign(); saveJsa(); }); lab.append(cb, x); return lab; }));
+    $('js-hosp').value = j.hosp; $('js-muster').value = j.muster; $('js-notes').value = j.notes; $('js-name').value = j.sig?.name || $('bywho').value;
+    paintSig($('js-line'), $('js-date'), j.sig, 'Technician signature'); $('js-msg').textContent = '';
+  }
+  // Any change after signing clears the signature, so a signed JSA always matches what's on it.
+  function unsign() { const j = curJsa(); if (j.sig) { j.sig = null; paintSig($('js-line'), $('js-date'), null, 'Technician signature'); $('js-msg').textContent = 'Changed after signing. Sign again.'; } }
+  [['js-hosp', 'hosp', 120], ['js-muster', 'muster', 120], ['js-notes', 'notes', 600]].forEach(([id, key, n]) => $(id).addEventListener('input', () => { curJsa()[key] = $(id).value.slice(0, n); unsign(); saveJsa(); }));
+  $('js-sign').addEventListener('click', () => { const n = $('js-name').value.trim(); if (!n) { $('js-msg').textContent = 'Type your name to sign.'; return; }
+    curJsa().sig = { name: n.slice(0, 80), at: Date.now() }; saveJsa(); paintSig($('js-line'), $('js-date'), curJsa().sig, 'Technician signature'); $('js-msg').textContent = 'JSA signed'; updateBar(); });
+  $('js-copy').addEventListener('click', async () => { const j = curJsa();
+    const lines = ['STONERIVER FIELDSCAN — JOB SAFETY ANALYSIS', ...[...$('js-meta').children].map(w => `${w.children[0].textContent}: ${w.children[1].textContent}`), '', 'Hazards present:',
+      ...HAZ.filter(([k]) => j.hz[k].on).map(([k, name]) => `- ${name}: ${j.hz[k].ctl}`), ...(HAZ.some(([k]) => j.hz[k].on) ? [] : ['- None checked']), '', `PPE: ${j.ppe.join(', ') || 'none checked'}`,
+      `Nearest hospital: ${j.hosp || '—'}`, `Muster point: ${j.muster || '—'}`, ...(j.notes ? [`Notes: ${j.notes}`] : []), '', j.sig ? `Technician signature: /s/ ${j.sig.name}   ${sigDate(j.sig.at)}` : 'Technician signature: ____________________'];
+    try { await navigator.clipboard.writeText(lines.join('\n')); $('js-msg').textContent = 'JSA copied'; } catch (e) { $('js-msg').textContent = 'Copy is blocked in this view.'; } });
+  let jsaFocus = null;
+  function openJsa() { jsaFocus = document.activeElement; renderJsa(); $('jsasheet').hidden = false; $('jsa-close').focus(); }
+  function closeJsa() { $('jsasheet').hidden = true; updateBar(); if (jsaFocus && jsaFocus.focus) jsaFocus.focus(); }
+  $('jsa-top').addEventListener('click', openJsa); $('jsa-close').addEventListener('click', closeJsa);
+  $('jsasheet').addEventListener('click', e => { if (e.target === $('jsasheet')) closeJsa(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !$('jsasheet').hidden) closeJsa(); });
+  $('js-print').addEventListener('click', () => window.print());
+
   function closePlan() { $('plansheet').hidden = true; if (planFocus && planFocus.focus) planFocus.focus(); }
   $('plan-top').addEventListener('click', openPlan); $('plan-close').addEventListener('click', closePlan);
   $('plansheet').addEventListener('click', e => { if (e.target === $('plansheet')) closePlan(); });
@@ -1267,7 +1358,8 @@
     const tk = $('ticket').value.trim(), st = $('site').value.trim();
     $('tb-title').textContent = tk ? `Ticket ${tk}` : 'Start a ticket';
     $('tb-sub').textContent = tk ? (st || 'Add the site and utilities') : 'Tap to add the ticket number, site and utilities';
-    $('tb-count').textContent = `${log.length} ${log.length === 1 ? 'mark' : 'marks'}`;
+    $('tb-count').textContent = `${tk ? (jsaSigned() ? 'JSA ✓ · ' : 'JSA needed · ') : ''}${log.length} ${log.length === 1 ? 'mark' : 'marks'}`;
+    $('jsa-top').classList.toggle('need', !!tk && !jsaSigned());
     $('tb-dots').replaceChildren(...(tk ? need : []).map(k => { const i = el('i'); i.style.background = `rgb(${KINDS[k][1]})`; i.title = KINDS[k][0]; return i; }));
   }
   let tsFocus = null;
@@ -1284,7 +1376,7 @@
     .observe($('msg'), { childList: true, characterData: true, subtree: true });
   // Real printing works when Fieldscan runs as its own page (not inside a preview frame).
   let top = false; try { top = window.top === window.self; } catch (e) {}
-  if (top && typeof window.print === 'function') { $('rp-print').hidden = false; $('rc-print').hidden = false; }
+  if (top && typeof window.print === 'function') { $('rp-print').hidden = false; $('rc-print').hidden = false; $('js-print').hidden = false; }
   $('rp-print').addEventListener('click', () => window.print()); $('rc-print').addEventListener('click', () => window.print());
   // Keep the graph sized to its box on every layout change (rotation, keyboard, split view).
   if ('ResizeObserver' in window) new ResizeObserver(() => size()).observe($('graph'));
