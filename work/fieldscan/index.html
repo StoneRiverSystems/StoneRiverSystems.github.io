@@ -387,7 +387,6 @@
     <dl class="rp-meta" id="rc-meta"></dl>
     <ol class="route" id="rc-route" aria-label="Tickets worked"></ol>
     <div class="signrow"><input id="rc-tname" placeholder="Technician: type your name to sign" maxlength="80" aria-label="Technician name"><button type="button" class="btn small" id="rc-tsign">Sign</button></div>
-    <div class="signrow"><input id="rc-sname" placeholder="Supervisor: type your name to sign" maxlength="80" aria-label="Supervisor name"><button type="button" class="btn small" id="rc-ssign">Sign</button></div>
     <div class="rp-sign"><span id="rc-tline">Technician signature</span><span id="rc-tdate">Date</span></div>
     <div class="rp-sign" style="padding-top:34px"><span id="rc-sline">Supervisor review</span><span id="rc-sdate">Date</span></div>
     <p class="rp-note">Service record of tickets worked and utilities marked. Times are from the device. Demo readings are simulated.</p>
@@ -919,9 +918,9 @@
   $('rp-sign').addEventListener('click', () => { const n = $('rp-name').value.trim(); if (!n) { $('rp-msg').textContent = 'Type your name to sign.'; return; }
     rsig[tid] = { name: n.slice(0, 80), at: Date.now() }; saveSigs(); paintReportSig(); $('rp-msg').textContent = 'Signed'; });
   function paintDaySig() { const day = $('rc-day').value, g = dsig[day] || {};
-    paintSig($('rc-tline'), $('rc-tdate'), g.tech, 'Technician signature'); paintSig($('rc-sline'), $('rc-sdate'), g.sup, 'Supervisor review');
-    $('rc-tname').value = g.tech?.name || $('bywho').value; $('rc-sname').value = g.sup?.name || ''; }
-  [['rc-tsign', 'rc-tname', 'tech'], ['rc-ssign', 'rc-sname', 'sup']].forEach(([b, i, who]) => $(b).addEventListener('click', () => {
+    paintSig($('rc-tline'), $('rc-tdate'), g.tech, 'Technician signature'); paintSig($('rc-sline'), $('rc-sdate'), null, 'Supervisor review (signed in office)');
+    $('rc-tname').value = g.tech?.name || $('bywho').value; }
+  [['rc-tsign', 'rc-tname', 'tech']].forEach(([b, i, who]) => $(b).addEventListener('click', () => {
     const n = $(i).value.trim(), day = $('rc-day').value; if (!n) { $('rc-msg').textContent = 'Type a name to sign.'; return; }
     dsig[day] = { ...(dsig[day] || {}), [who]: { name: n.slice(0, 80), at: Date.now() } }; saveSigs(); paintDaySig(); $('rc-msg').textContent = 'Signed'; }));
 
@@ -1067,7 +1066,7 @@
     const day = $('rc-day').value, list = recapFor(day);
     const lines = [`STONERIVER FIELDSCAN — DAILY FIELD LOG (SERVICE REPORT) ${day}`, ...[...$('rc-meta').children].map(w => `${w.children[0].textContent}: ${w.children[1].textContent}`), ''];
     list.forEach((t, i) => { lines.push(`${i + 1}. ${hm(t.start)}–${hm(t.end)}  Ticket ${t.ticket || '—'}  ${t.site}${t.forwho ? '  for ' + t.forwho : ''}${t.open ? '  (open)' : ''}`, `   ${markSum(t)}`, `   ${ticketDone(t) ? 'Complete' : 'Not complete'}: ${respLine(t)}`, `   Photos: ${(photos[t.id] || []).length}`, ...(notes[t.id] ? [`   Notes: ${notes[t.id].replace(/\s+/g, ' ')}`] : [])); });
-    const g = dsig[day] || {}; lines.push('', g.tech ? `Technician signature: /s/ ${g.tech.name}   ${sigDate(g.tech.at)}` : 'Technician signature: ____________________   Date: ________', g.sup ? `Supervisor review:    /s/ ${g.sup.name}   ${sigDate(g.sup.at)}` : 'Supervisor review:    ____________________   Date: ________');
+    const g = dsig[day] || {}; lines.push('', g.tech ? `Technician signature: /s/ ${g.tech.name}   ${sigDate(g.tech.at)}` : 'Technician signature: ____________________   Date: ________', 'Supervisor review:    ____________________   Date: ________');
     try { await navigator.clipboard.writeText(lines.join('\n')); $('rc-msg').textContent = 'Field log copied'; } catch (e) { $('rc-msg').textContent = 'Copy is blocked in this view.'; }
   });
 
