@@ -99,6 +99,12 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 .ridge-copy{display:flex;flex-direction:column;gap:12px;min-width:0}
 .ridge-name{font-family:'Lilita One',sans-serif;font-size:34px;line-height:1.05;color:#1F3A5F}
 .ridge-btn{align-self:flex-start;font-family:'Lilita One',sans-serif;font-size:16px;letter-spacing:1px;color:#fff;background:#E25E18;border:3px solid #1E1A17;border-radius:12px;padding:8px 16px}
+.work-card--wide{grid-column:1/-1}
+.work-preview--scan{background:#06090B;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px;padding:28px 36px;color:#E8EDEE}
+.scan-bars{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:clamp(9px,1.6vw,19px);line-height:1.12;font-weight:700;color:#FAD640;white-space:pre;margin:0;overflow:hidden;text-shadow:0 0 10px rgba(250,214,64,.35)}
+.scan-side{display:flex;flex-direction:column;align-items:center;gap:14px}
+.scan-side svg{width:84px;height:84px;color:#8FF0C0;filter:drop-shadow(0 0 14px rgba(143,240,192,.5))}
+.scan-read{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-weight:600;font-size:28px}
 .work-body{flex:1;display:flex;flex-direction:column;gap:12px;padding:28px}
 .work-kicker{margin:0;font-size:13px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;opacity:.8}
 .work-title{margin:0;font-family:'Anton',sans-serif;font-weight:400;font-size:34px;text-transform:uppercase;line-height:1.05}
@@ -113,6 +119,10 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 }
 @media (max-width:480px){
  .work-preview{height:240px}
+ .work-preview--scan{padding:20px;gap:12px}
+ .scan-bars{font-size:7.5px}
+ .scan-side svg{width:56px;height:56px}
+ .scan-read{font-size:20px}
  .rose-name{font-size:80px}
  .rose-tag{font-size:11px;letter-spacing:.2em;white-space:nowrap}
  .ridge-inner{gap:12px;padding:12px 16px}
@@ -334,7 +344,7 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <section id="work" style="border-top: 2px solid #EFE7D4">
 <div class="work-wrap">
 <h2 class="work-h2">Our work</h2>
-<p class="work-lede">Two samples of what we build: a booking website for a beauty business, and an interactive safety game starring our own mascot. Click through and try them.</p>
+<p class="work-lede">Samples of what we build: a booking website for a beauty business, an interactive safety game starring our own mascot, and Fieldscan, our take on a modern utility locate screen. Click through and try them.</p>
 <div class="work-grid">
 
 <article class="work-card">
@@ -370,6 +380,32 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <p class="work-text">A two-part kids' safety game hosted by Ridge, our mascot. Kids learn about power lines, gas smells, calling 811 and spotting utilities, then print a Junior Safety Crew badge.</p>
 <p class="work-note">Collects no personal information.</p>
 <a class="work-link" href="work/ridge-safety-crew/" data-goatcounter-click="work-ridge-game">Play the game</a>
+</div>
+</article>
+
+<article class="work-card work-card--wide">
+<div class="work-preview work-preview--scan">
+<pre class="scan-bars" aria-hidden="true">                          @
+                         @@@
+                         ###
+                        %%%%%
+                        *****
+                       +++++++
+                       =======
+                      ---------
+                    :::::::::::::
+                 ...................</pre>
+<div class="scan-side" aria-hidden="true">
+<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="30" cy="30" r="17"/><path d="M30 3v12M30 45v12M3 30h12M45 30h12"/><circle cx="30" cy="30" r="2.5" fill="currentColor" stroke="none"/></svg>
+<span class="scan-read">2' 9"</span>
+</div>
+</div>
+<div class="work-body">
+<p class="work-kicker">Field app · Utility locating</p>
+<h3 class="work-title">Fieldscan</h3>
+<p class="work-text">A modern locate screen for utility techs: sweep for the peak, get left or right guidance, read depth and current, mark each utility in APWA colors, set a response for every utility on the ticket, and close the day with a printable locate report and daily field log. Works on phone, tablet and desktop.</p>
+<p class="work-note">Demo uses a simulated yard. Not a real locate. Always call 811.</p>
+<a class="work-link" href="work/fieldscan/" data-goatcounter-click="work-fieldscan">Try the demo</a>
 </div>
 </article>
 
