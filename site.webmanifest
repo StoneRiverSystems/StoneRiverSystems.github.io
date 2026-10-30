@@ -3,8 +3,8 @@
   "short_name": "StoneRiver",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0E0E0C",
-  "theme_color": "#0E0E0C",
+  "background_color": "#0B1A18",
+  "theme_color": "#0B1A18",
   "icons": [
     {
       "src": "/assets/img/icon-192.png",
