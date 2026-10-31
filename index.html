@@ -6,13 +6,13 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://stonerivercoast.goatcounter.com; connect-src https://stonerivercoast.goatcounter.com; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>StoneRiver Holdings · Small Business Systems | Gulfport, Biloxi &amp; the Mississippi Gulf Coast</title>
-<meta name="description" content="StoneRiver Holdings · Small Business Systems organizes the back office for small businesses on the Mississippi Gulf Coast: job & invoice trackers, supply trackers, written procedures and Google listing updates. Fixed price, set up in your own accounts.">
-<link rel="canonical" href="https://stoneriversystems.github.io/">
+<meta name="description" content="StoneRiver Holdings · Small Business Systems helps small businesses on the Mississippi Gulf Coast know who owes them money: job &amp; invoice trackers, supply trackers and step-by-step crew guides. Fixed price, set up in your own accounts.">
+<link rel="canonical" href="https://stonerivercoast.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="StoneRiver Holdings · Small Business Systems">
-<meta property="og:description" content="StoneRiver Holdings · Small Business Systems organizes the back office for small businesses on the Mississippi Gulf Coast: job & invoice trackers, supply trackers, written procedures and Google listing updates. Fixed price, set up in your own accounts.">
-<meta property="og:url" content="https://stoneriversystems.github.io/">
-<meta property="og:image" content="https://stoneriversystems.github.io/assets/img/og-image.jpg">
+<meta property="og:description" content="StoneRiver Holdings · Small Business Systems helps small businesses on the Mississippi Gulf Coast know who owes them money: job &amp; invoice trackers, supply trackers and step-by-step crew guides. Fixed price, set up in your own accounts.">
+<meta property="og:url" content="https://stonerivercoast.com/">
+<meta property="og:image" content="https://stonerivercoast.com/assets/img/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="StoneRiver logo: a river winding under live oaks">
@@ -37,7 +37,7 @@ a:focus-visible{outline:2px solid #57B9A8;outline-offset:3px}
 header nav a{min-height:44px;display:inline-flex;align-items:center}
 @media (max-width:600px){
  header nav{gap:0 18px !important;font-size:14px !important}
- header nav a[href="#how"]{display:none !important}
+ header nav a[href="#how"],header nav a[href="guides/"]{display:none !important}
  header > a img{width:210px !important}
 }
 /* Big SR badge: computers only; on phones/tablets it pushes "Start free" down a full screen */
@@ -80,8 +80,31 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 /* call-to-action band after services */
 .cta-band{margin-top:40px;border:2px dashed #EFE4CC;border-radius:20px;padding:24px 28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 32px}
 .cta-h{margin:0;font-family:'Anton',sans-serif;font-size:30px;line-height:1.05;text-transform:uppercase}
+/* services: core grid + "also available" */
+.svc-span2{grid-column:span 2}
+@media (max-width:700px){.svc-span2{grid-column:auto}}
+.also-h{margin:56px 0 6px;font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(30px,4vw,44px);line-height:1.05;text-transform:uppercase}
+.also-sub{margin:0 0 24px;opacity:.85;max-width:40em}
+.svc-also{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:700px){.svc-also{grid-template-columns:minmax(0,1fr)}}
+/* about */
+.about{display:flex;flex-wrap:wrap;gap:40px 56px;align-items:flex-start}
+.about-mark{flex:none;width:180px;height:180px;border-radius:50%;border:2px solid #EFE4CC;display:flex;align-items:center;justify-content:center;font-family:'Anton',sans-serif;font-size:72px;letter-spacing:.04em;background:radial-gradient(circle at 30% 30%,rgba(87,185,168,.28),transparent 70%)}
+.about-body{flex:1 1 420px;min-width:0;max-width:40em}
+.about-body p{margin:0 0 16px}
+.about-facts{list-style:none;margin:24px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.about-facts li{border:2px solid #EFE4CC;border-radius:999px;padding:8px 16px;font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+/* faq */
+.faq{max-width:52em}
+.faq details{border-top:1px solid rgba(239,228,204,.25)}
+.faq details:last-child{border-bottom:1px solid rgba(239,228,204,.25)}
+.faq summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:16px;min-height:60px;padding:8px 0;font-family:'Anton',sans-serif;font-size:24px;line-height:1.15;text-transform:uppercase}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";margin-left:auto;font-family:'Archivo',sans-serif;font-size:26px;line-height:1}
+.faq details[open] summary::after{content:"\2013"}
+.faq details p{margin:0 0 20px;opacity:.88}
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"StoneRiver Holdings","alternateName":"StoneRiver Holdings · Small Business Systems","url":"https://stoneriversystems.github.io/","telephone":"+1-225-317-6653","email":"marcus@stonerivercoast.com","description":"Back-office systems for small businesses on the Mississippi Gulf Coast: job & invoice trackers, supply & inventory trackers, written procedures, and website & Google listing refreshes.","areaServed":["Gulfport, MS","Biloxi, MS","Long Beach, MS","Pass Christian, MS","Ocean Springs, MS","D'Iberville, MS","Bay St. Louis, MS","Diamondhead, MS","Pascagoula, MS"],"priceRange":"$75-$500"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"StoneRiver Holdings · Small Business Systems","legalName":"StoneRiver Holdings LLC","founder":{"@type":"Person","name":"Marcus Johnson"},"url":"https://stonerivercoast.com/","telephone":"+1-225-317-6653","email":"marcus@stonerivercoast.com","description":"Job & invoice trackers, supply trackers and step-by-step crew guides for small businesses on the Mississippi Gulf Coast. Websites and logos also available.","areaServed":["Gulfport, MS","Biloxi, MS","Long Beach, MS","Pass Christian, MS","Ocean Springs, MS","D'Iberville, MS","Bay St. Louis, MS","Diamondhead, MS","Pascagoula, MS"],"priceRange":"$35-$500"}</script>
 <!-- Visitor counts: GoatCounter (no cookies, no personal data). Script hosted on this site. -->
 <script data-goatcounter="https://stonerivercoast.goatcounter.com/count" async src="assets/js/count.v5.js"></script>
 </head>
@@ -97,6 +120,7 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <a href="#services" style="text-decoration: none">Services</a>
 <a href="guides/" style="text-decoration: none">Guides</a>
 <a href="#how" style="text-decoration: none">How it works</a>
+<a href="#about" style="text-decoration: none">About</a>
 <a href="#contact" style="text-decoration: none">Contact</a>
 <a href="mailto:marcus@stonerivercoast.com?subject=Free%20back%20office%20checkup&amp;body=Business%20name%3A%0AWhat%20kind%20of%20business%3A%0AHow%20many%20people%3A%0A%0A3%20things%20I%27d%20like%20off%20my%20plate%3A%0A1.%0A2.%0A3.%0A%0AHow%20we%20keep%20track%20of%20things%20now%20(notebook%2C%20texts%2C%20spreadsheet%2C%20memory)%3A%0A" data-goatcounter-click="checkup-nav" style="text-decoration: none; border: 2px solid #EFE4CC; border-radius: 999px; padding: 10px 20px; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center">Free checkup</a>
 </nav>
@@ -105,8 +129,8 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <section id="top" style="max-width: 1240px; margin: 0 auto; padding: 48px 24px 96px; display: flex; flex-wrap: wrap; align-items: center; gap: 56px">
 <div style="flex: 999 1 560px; min-width: 0">
 <p style="margin: 0 0 24px; display: inline-flex; align-items: center; gap: 10px; border: 2px solid #EFE4CC; border-radius: 999px; padding: 8px 18px; font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 0.28em; text-transform: uppercase; line-height: 1">Small Business Systems</p>
-<h1 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(56px, 9vw, 128px); line-height: 0.92; text-transform: uppercase; letter-spacing: 0.01em">Your back office, handled.</h1>
-<p style="margin: 32px 0 0; max-width: 34em; font-size: 20px; opacity: 0.88">Job tracking, invoicing, inventory, staff guides and websites for small businesses on the Mississippi Gulf Coast. Built in your own accounts.</p>
+<h1 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(56px, 9vw, 128px); line-height: 0.92; text-transform: uppercase; letter-spacing: 0.01em">Know who owes you money.</h1>
+<p style="margin: 32px 0 0; max-width: 34em; font-size: 20px; opacity: 0.88">One simple tracker that shows every job, every bill and every late payment. For small businesses on the Mississippi Gulf Coast, built in your own accounts by Marcus Johnson.</p>
 <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px">
 <a href="mailto:marcus@stonerivercoast.com?subject=Free%20back%20office%20checkup&amp;body=Business%20name%3A%0AWhat%20kind%20of%20business%3A%0AHow%20many%20people%3A%0A%0A3%20things%20I%27d%20like%20off%20my%20plate%3A%0A1.%0A2.%0A3.%0A%0AHow%20we%20keep%20track%20of%20things%20now%20(notebook%2C%20texts%2C%20spreadsheet%2C%20memory)%3A%0A" data-goatcounter-click="checkup-hero" style="text-decoration: none; background: #57B9A8; color: #0B1A18; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 15px; padding: 16px 28px; border-radius: 999px; min-height: 52px; box-sizing: border-box; display: inline-flex; align-items: center">Get my free checkup</a>
 <a href="tel:+12253176653" data-goatcounter-click="call-marcus" style="text-decoration: none; border: 2px solid #EFE4CC; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 15px; padding: 14px 26px; border-radius: 999px; min-height: 52px; box-sizing: border-box; display: inline-flex; align-items: center">Call (225) 317-6653</a>
@@ -119,7 +143,7 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 </section>
 
 <div style="border-top: 2px solid #EFE4CC; border-bottom: 2px solid #EFE4CC; overflow: hidden">
-<p style="margin: 0; padding: 18px 24px; font-family: 'Anton', sans-serif; font-size: 26px; letter-spacing: 0.08em; text-transform: uppercase; text-align: center">Jobs ✕ Invoices ✕ Supplies ✕ Procedures ✕ Your Google listing</p>
+<p style="margin: 0; padding: 18px 24px; font-family: 'Anton', sans-serif; font-size: 26px; letter-spacing: 0.08em; text-transform: uppercase; text-align: center">Who owes you ✕ What to reorder ✕ How the job gets done</p>
 </div>
 
 <section id="free" style="max-width: 1240px; margin: 0 auto; padding: 96px 24px 0">
@@ -182,7 +206,7 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 
 <section id="services" style="max-width: 1240px; margin: 0 auto; padding: 96px 24px">
 <h2 style="margin: 0 0 12px; font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(44px, 6vw, 80px); line-height: 1; text-transform: uppercase">What we set up</h2>
-<p style="margin: 0 0 8px; max-width: 40em; opacity: 0.9">For Gulf Coast crews, shops, kitchens and offices.</p>
+<p style="margin: 0 0 8px; max-width: 40em; opacity: 0.9">Trackers and crew guides for Gulf Coast crews, shops, kitchens and offices.</p>
 <p style="margin: 0 0 24px; max-width: 40em; opacity: 0.85">Starting rates shown. Every project gets a fixed written price before work begins.</p>
 <p style="margin: 0 0 48px; display: inline-block; border: 2px dashed #EFE4CC; border-radius: 14px; padding: 14px 20px; max-width: 40em"><strong style="letter-spacing: 0.06em; text-transform: uppercase">Founding clients:</strong> the first 3 clients pay the starting price and get one month of upkeep free.</p>
 <div class="svc-grid">
@@ -222,6 +246,34 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 </details>
 <p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">$75 per guide</p>
 </div>
+<div style="background: #EFE4CC; color: #0B1A18; border: 2px solid #EFE4CC; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
+<h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 30px; text-transform: uppercase; line-height: 1.05">Setup bundle</h3>
+<p style="margin: 0; font-weight: 600; font-size: 18px">Several services, one project.</p>
+<ul style="margin: 0; padding-left: 20px; font-size: 16px"><li style="margin: 4px 0">Any 2&ndash;3 services on this page, done together</li><li style="margin: 4px 0">One-hour walkthrough for you and your crew</li><li style="margin: 4px 0">A handoff checklist so nothing's forgotten</li></ul>
+<p style="margin: 0; font-size: 14px;"><strong>Good for:</strong> Owners who want everything set up at once</p>
+<details class="scope" style="border-top-color: rgba(14,14,12,.25)"><summary>What's included</summary>
+<p class="scope-h">Included</p><ul><li>Any 2–3 services on this page, each with its own included scope</li><li>One-hour walkthrough for you and your crew</li><li>Handoff checklist</li></ul>
+<p class="scope-h">You provide</p><ul><li>What each chosen service needs</li></ul>
+<p class="scope-h">Quoted separately</p><ul><li>Anything beyond each service's included scope</li></ul>
+</details>
+<p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">From $300</p>
+</div>
+<div class="svc-span2" style="border: 2px solid #EFE4CC; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
+<h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 30px; text-transform: uppercase; line-height: 1.05">Monthly upkeep</h3>
+<p style="margin: 0; font-weight: 600; font-size: 18px">Ongoing updates as your business changes.</p>
+<ul style="margin: 0; padding-left: 20px; opacity: 0.85; font-size: 16px"><li style="margin: 4px 0">Up to 2 hours a month of updates and fixes</li><li style="margin: 4px 0">Replies within 1 business day; most fixes within 3</li><li style="margin: 4px 0">Month to month, cancel anytime</li></ul>
+<p style="margin: 0; font-size: 14px; opacity: 0.85;"><strong>Good for:</strong> Owners who want it maintained for them</p>
+<details class="scope"><summary>What's included</summary>
+<p class="scope-h">Included</p><ul><li>Up to 2 hours a month of updates and fixes</li><li>Replies within 1 business day</li></ul>
+<p class="scope-h">You provide</p><ul><li>A heads-up when something changes in your business</li></ul>
+<p class="scope-h">Quoted separately</p><ul><li>Unused hours don't roll over</li><li>New builds or big changes are quoted separately</li></ul>
+</details>
+<p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">From $100/month</p>
+</div>
+</div>
+<h3 class="also-h">Also available</h3>
+<p class="also-sub">Need to be found online? I build simple websites and logos too, at founding-client prices.</p>
+<div class="svc-grid svc-also">
 <div style="border: 2px solid #EFE4CC; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
 <h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 30px; text-transform: uppercase; line-height: 1.05">Website &amp; Google listing refresh</h3>
 <p style="margin: 0; font-weight: 600; font-size: 18px">Be easy to find and easy to contact.</p>
@@ -245,30 +297,6 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <p class="scope-h">Quoted separately</p><ul><li>Extra concepts or revision rounds</li><li>Colorways, badges, stickers and seals</li></ul>
 </details>
 <p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">From $35</p>
-</div>
-<div style="background: #EFE4CC; color: #0B1A18; border: 2px solid #EFE4CC; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
-<h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 30px; text-transform: uppercase; line-height: 1.05">Setup bundle</h3>
-<p style="margin: 0; font-weight: 600; font-size: 18px">Several services, one project.</p>
-<ul style="margin: 0; padding-left: 20px; font-size: 16px"><li style="margin: 4px 0">Any 2&ndash;3 of the services above, done together</li><li style="margin: 4px 0">One-hour walkthrough for you and your crew</li><li style="margin: 4px 0">A handoff checklist so nothing's forgotten</li></ul>
-<p style="margin: 0; font-size: 14px;"><strong>Good for:</strong> Owners who want everything set up at once</p>
-<details class="scope" style="border-top-color: rgba(14,14,12,.25)"><summary>What's included</summary>
-<p class="scope-h">Included</p><ul><li>Any 2–3 services above, each with its own included scope</li><li>One-hour walkthrough for you and your crew</li><li>Handoff checklist</li></ul>
-<p class="scope-h">You provide</p><ul><li>What each service above needs</li></ul>
-<p class="scope-h">Quoted separately</p><ul><li>Anything beyond each service's included scope</li></ul>
-</details>
-<p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">From $300</p>
-</div>
-<div class="svc-wide" style="border: 2px solid #EFE4CC; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
-<h3 style="margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 30px; text-transform: uppercase; line-height: 1.05">Monthly upkeep</h3>
-<p style="margin: 0; font-weight: 600; font-size: 18px">Ongoing updates as your business changes.</p>
-<ul style="margin: 0; padding-left: 20px; opacity: 0.85; font-size: 16px"><li style="margin: 4px 0">Up to 2 hours a month of updates and fixes</li><li style="margin: 4px 0">Replies within 1 business day; most fixes within 3</li><li style="margin: 4px 0">Month to month, cancel anytime</li></ul>
-<p style="margin: 0; font-size: 14px; opacity: 0.85;"><strong>Good for:</strong> Owners who want it maintained for them</p>
-<details class="scope"><summary>What's included</summary>
-<p class="scope-h">Included</p><ul><li>Up to 2 hours a month of updates and fixes</li><li>Replies within 1 business day</li></ul>
-<p class="scope-h">You provide</p><ul><li>A heads-up when something changes in your business</li></ul>
-<p class="scope-h">Quoted separately</p><ul><li>Unused hours don't roll over</li><li>New builds or big changes are quoted separately</li></ul>
-</details>
-<p style="margin: auto 0 0; padding-top: 8px; font-weight: 600; font-size: 20px; letter-spacing: 0.04em">From $100/month</p>
 </div>
 </div>
 <div class="terms">
@@ -313,6 +341,35 @@ header nav a{min-height:44px;display:inline-flex;align-items:center}
 <span style="opacity: 0.85">We train your team, leave a reference guide and offer monthly upkeep.</span>
 </li>
 </ol>
+</div>
+</section>
+
+<section id="about" style="border-top: 2px solid #EFE4CC">
+<div style="max-width: 1240px; margin: 0 auto; padding: 96px 24px">
+<h2 style="margin: 0 0 40px; font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(44px, 6vw, 80px); line-height: 1; text-transform: uppercase">Who you'll work with</h2>
+<div class="about">
+<div class="about-mark" aria-hidden="true">MJ</div>
+<div class="about-body">
+<p style="font-size: 22px; font-weight: 600">I'm Marcus Johnson. I grew up on the Mississippi Gulf Coast, and I build every StoneRiver system myself.</p>
+<p style="opacity: 0.88">Before writing software, I worked on field crews and in logistics. I've seen jobs tracked on scrap paper and in text threads, and money left on the table because nobody had time to chase it.</p>
+<p style="opacity: 0.88">I build simple tools for that problem. They live in your own Google or Microsoft account, your crew can learn them in an afternoon, and you get a fixed price before I start. When you call, I'm the one who answers.</p>
+<ul class="about-facts"><li>Based on the Gulf Coast</li><li>Owner-operated</li><li>Fixed prices</li><li>Your accounts, your data</li></ul>
+</div>
+</div>
+</div>
+</section>
+
+<section id="faq" style="border-top: 2px solid #EFE4CC">
+<div style="max-width: 1240px; margin: 0 auto; padding: 96px 24px">
+<h2 style="margin: 0 0 40px; font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(44px, 6vw, 80px); line-height: 1; text-transform: uppercase">Questions</h2>
+<div class="faq">
+<details><summary>I already use QuickBooks. Do I need this?</summary><p>Keep QuickBooks for your books. The tracker covers what happens before a bill goes out: quotes waiting on an answer, scheduled jobs, and finished work that hasn't been billed. If you want the two connected, that's quoted separately.</p></details>
+<details><summary>Do I have to buy new software?</summary><p>No. Everything is built in Google Sheets or Excel, in an account you already have or can make for free.</p></details>
+<details><summary>Do you need my passwords?</summary><p>Never. You share access to the file or account, and you can remove it at any time.</p></details>
+<details><summary>What if it doesn't fit how we work?</summary><p>Each setup includes a round of changes after you've used it. You see the fixed price and what's included before any work begins.</p></details>
+<details><summary>What happens after the setup?</summary><p>It's yours. Your team runs it day to day. If you want changes as your business grows, monthly upkeep covers them, or I'll quote them one at a time.</p></details>
+<details><summary>Do I have to meet in person?</summary><p>No. Most setups are done by email, phone and screen share. You can send a photo of your notebook to get started.</p></details>
+</div>
 </div>
 </section>
 
